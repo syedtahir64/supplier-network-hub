@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Network Hub | Find Trusted Suppliers</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; background: #f4f6f8; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Header ── */
+    header {
+      background: #131921;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: #FF9900;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 18px; color: #131921;
+    }
+    .logo-text { color: #fff; font-size: 20px; font-weight: 700; line-height: 1.1; }
+    .logo-text span { color: #FF9900; }
+    .logo-sub { color: #aaa; font-size: 11px; letter-spacing: 0.5px; }
+    .header-cta {
+      background: #FF9900;
+      color: #131921;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 9px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .header-cta:hover { background: #e88a00; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #131921 0%, #1e2d3d 60%, #232f3e 100%);
+      color: #fff;
+      padding: 70px 32px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(255,153,0,0.12) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,153,0,0.15);
+      border: 1px solid rgba(255,153,0,0.4);
+      color: #FF9900;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    .hero h1 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+    .hero h1 span { color: #FF9900; }
+    .hero p { font-size: 17px; color: #c8d0d8; max-width: 620px; margin: 0 auto 36px; line-height: 1.7; }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 30px; font-weight: 800; color: #FF9900; }
+    .stat-label { font-size: 13px; color: #9ba8b4; margin-top: 2px; }
+
+    /* ── Search + Filter Bar ── */
+    .filter-bar {
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 20px 32px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 66px;
+      z-index: 90;
+    }
+    .search-wrap {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: #FF9900; }
+    .search-icon {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 16px;
+    }
+    .filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1.5px solid #ddd;
+      background: #fff;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #444;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: #FF9900; color: #FF9900; }
+    .filter-btn.active { background: #FF9900; border-color: #FF9900; color: #131921; font-weight: 700; }
+    .result-count { font-size: 13px; color: #888; margin-left: auto; white-space: nowrap; }
+
+    /* ── Main Layout ── */
+    main { max-width: 1280px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-size: 22px;
+      font-weight: 700;
+      color: #131921;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, #FF9900, transparent);
+      margin-left: 8px;
+    }
+
+    /* ── Supplier Grid ── */
+    .supplier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 22px;
+    }
+
+    /* ── Supplier Card ── */
+    .supplier-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      display: flex;
+      flex-direction: column;
+    }
+    .supplier-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+      border-color: #FF9900;
+    }
+    .card-header {
+      padding: 18px 20px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .supplier-logo {
+      width: 54px; height: 54px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+    .card-title-block { flex: 1; min-width: 0; }
+    .card-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-category {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #fff3e0;
+      color: #e67e00;
+    }
+    .trusted-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #2e7d32;
+      background: #e8f5e9;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .trusted-badge svg { width: 12px; height: 12px; }
+
+    .card-body { padding: 14px 20px; flex: 1; }
+    .card-desc { font-size: 13.5px; color: #555; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .card-meta {
+      padding: 12px 20px;
+      background: #fafafa;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-top: 1px solid #f0f0f0;
+    }
+    .meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #666; }
+    .meta-item strong { color: #333; }
+
+    .card-footer {
+      padding: 14px 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-contact {
+      flex: 1;
+      padding: 9px;
+      background: #FF9900;
+      color: #131921;
+      font-weight: 700;
+      font-size: 13px;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-contact:hover { background: #e88a00; }
+    .btn-details {
+      padding: 9px 16px;
+      background: #fff;
+      color: #131921;
+      font-weight: 600;
+      font-size: 13px;
+      border: 1.5px solid #ddd;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .btn-details:hover { border-color: #FF9900; color: #FF9900; }
+
+    .star-rating { color: #FF9900; font-size: 13px; }
+    .rating-count { color: #888; font-size: 12px; }
+
+    /* ── No results ── */
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+      color: #888;
+      display: none;
+    }
+    .no-results svg { width: 60px; height: 60px; margin-bottom: 16px; opacity: 0.3; }
+    .no-results h3 { font-size: 18px; color: #555; margin-bottom: 8px; }
+
+    /* ── Info Banner ── */
+    .info-banner {
+      background: linear-gradient(135deg, #fff8ee, #fff3dc);
+      border: 1px solid #ffe0a0;
+      border-radius: 12px;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+    .info-banner-icon { font-size: 32px; flex-shrink: 0; }
+    .info-banner p { font-size: 14px; color: #555; line-height: 1.6; }
+    .info-banner p strong { color: #111; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(3px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .modal-header {
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .modal-logo {
+      width: 64px; height: 64px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 900; color: #fff;
+      flex-shrink: 0;
+    }
+    .modal-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .modal-category { font-size: 13px; color: #888; margin-bottom: 6px; }
+    .modal-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #888;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+    .modal-close:hover { color: #111; }
+    .modal-body { padding: 24px 28px; }
+    .modal-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #888; margin: 20px 0 10px; }
+    .modal-section-title:first-child { margin-top: 0; }
+    .modal-desc { font-size: 15px; color: #444; line-height: 1.75; }
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      background: #f0f4f8;
+      border-radius: 5px;
+      padding: 5px 12px;
+      font-size: 13px;
+      color: #444;
+    }
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 4px;
+    }
+    .modal-stat {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .modal-stat-num { font-size: 20px; font-weight: 800; color: #FF9900; }
+    .modal-stat-label { font-size: 11px; color: #888; margin-top: 3px; }
+    .modal-footer {
+      padding: 18px 28px 24px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 12px;
+    }
+    .modal-btn-primary {
+      flex: 1;
+      padding: 12px;
+      background: #FF9900;
+      color: #131921;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-btn-primary:hover { background: #e88a00; }
+    .modal-btn-secondary {
+      padding: 12px 20px;
+      background: #fff;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #333;
+      transition: border-color 0.2s;
+    }
+    .modal-btn-secondary:hover { border-color: #FF9900; color: #FF9900; }
+
+    /* ── Footer ── */
+    footer {
+      background: #131921;
+      color: #888;
+      text-align: center;
+      padding: 28px;
+      font-size: 13px;
+    }
+    footer span { color: #FF9900; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .hero { padding: 50px 20px 40px; }
+      .hero-stats { gap: 28px; }
+      .filter-bar { padding: 14px 16px; }
+      main { padding: 28px 14px 60px; }
+      .modal-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">S</div>
+    <div>
+      <div class="logo-text">Supplier <span>Network</span> Hub</div>
+      <div class="logo-sub">Powered by Amazon Trusted Suppliers</div>
+    </div>
+  </div>
+  <button class="header-cta" onclick="openModal(suppliers[0])">Become a Supplier</button>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div style="position:relative;">
+    <div class="hero-badge">&#10003; Amazon Verified Supplier Network</div>
+    <h1>Source Inventory from<br><span>Amazon Trusted Suppliers</span></h1>
+    <p>Discover, evaluate, and connect with pre-vetted suppliers across every product category. Every supplier on this network has been assessed and approved by Amazon to ensure quality and reliability.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Verified Suppliers</div></div>
+      <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Product Categories</div></div>
+      <div class="stat"><div class="stat-num">15K+</div><div class="stat-label">Sellers Sourcing</div></div>
+      <div class="stat"><div class="stat-num">4.7★</div><div class="stat-label">Avg. Supplier Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Filter Bar ── -->
+<div class="filter-bar">
+  <div class="search-wrap">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" id="searchInput" placeholder="Search suppliers by name, category, or location…" oninput="filterSuppliers()" />
+  </div>
+  <div class="filter-group" id="filterGroup">
+    <button class="filter-btn active" data-cat="all" onclick="setFilter('all', this)">All Categories</button>
+    <button class="filter-btn" data-cat="Electronics" onclick="setFilter('Electronics', this)">Electronics</button>
+    <button class="filter-btn" data-cat="Fashion" onclick="setFilter('Fashion', this)">Fashion</button>
+    <button class="filter-btn" data-cat="Home & Kitchen" onclick="setFilter('Home & Kitchen', this)">Home & Kitchen</button>
+    <button class="filter-btn" data-cat="Beauty" onclick="setFilter('Beauty', this)">Beauty</button>
+    <button class="filter-btn" data-cat="Sports" onclick="setFilter('Sports', this)">Sports</button>
+    <button class="filter-btn" data-cat="Grocery" onclick="setFilter('Grocery', this)">Grocery</button>
+    <button class="filter-btn" data-cat="Toys" onclick="setFilter('Toys', this)">Toys</button>
+    <button class="filter-btn" data-cat="Automotive" onclick="setFilter('Automotive', this)">Automotive</button>
+  </div>
+  <span class="result-count" id="resultCount">Showing 16 suppliers</span>
+</div>
+
+<!-- ── Main ── -->
+<main>
+  <div class="info-banner">
+    <div class="info-banner-icon">&#128274;</div>
+    <p><strong>All suppliers listed here are Amazon Trusted & Verified.</strong> They have been assessed for product quality, compliance, and reliability. Click "Request Quote" on any supplier to begin sourcing inventory directly for your Amazon seller account.</p>
+  </div>
+
+  <div class="section-heading">Browse Suppliers by Category</div>
+
+  <div class="supplier-grid" id="supplierGrid"></div>
+  <div class="no-results" id="noResults">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <h3>No suppliers found</h3>
+    <p>Try a different search term or category filter.</p>
+  </div>
+</main>
+
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-logo" id="modalLogo"></div>
+      <div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-category" id="modalCategory"></div>
+        <div id="modalRating"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">About this Supplier</div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-section-title">Key Highlights</div>
+      <div class="modal-tags" id="modalTags"></div>
+      <div class="modal-section-title">Supplier Stats</div>
+      <div class="modal-stats" id="modalStats"></div>
+      <div class="modal-section-title">Products Supplied</div>
+      <div class="modal-tags" id="modalProducts"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn-primary">&#128222; Request Quote</button>
+      <button class="modal-btn-secondary">&#9733; Save Supplier</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>&copy; 2026 <span>Supplier Network Hub</span>. All suppliers are assessed and verified by Amazon. &nbsp;|&nbsp; For sellers on Amazon.in</p>
+</footer>
+
+<script>
+  // ── Supplier Data ──
+  const suppliers = [
+    {
+      id: 1, name: "TechSource India", initials: "TS", color: "#0066cc",
+      category: "Electronics",
+      location: "Bengaluru, KA", moq: "₹50,000", rating: 4.8, reviews: 312,
+      desc: "TechSource India is a leading electronics wholesale supplier offering smartphones, accessories, audio equipment, and smart home devices. All products are brand-authorized with full warranty and ISI certification.",
+      tags: ["Brand Authorized", "ISI Certified", "Pan-India Delivery", "Bulk Pricing", "30-Day Returns"],
+      products: ["Smartphones", "Earphones", "Smartwatches", "Chargers", "Smart Home Devices"],
+      stats: { "Years Active": "8 Yrs", "Orders/Month": "2,400+", "On-time Delivery": "97%" }
+    },
+    {
+      id: 2, name: "FashionForge Textiles", initials: "FF", color: "#9c27b0",
+      category: "Fashion",
+      location: "Surat, GJ", moq: "₹20,000", rating: 4.6, reviews: 218,
+      desc: "FashionForge Textiles specializes in readymade garments, ethnic wear, and western fashion for men, women, and kids. Offers private labeling, custom packaging, and GST-compliant invoicing for Amazon sellers.",
+      tags: ["Private Label", "Custom Packaging", "GST Compliant", "Trend-Forward", "FBA Ready"],
+      products: ["Kurtis", "T-Shirts", "Sarees", "Jeans", "Kids Wear", "Ethnic Sets"],
+      stats: { "Years Active": "6 Yrs", "Orders/Month": "1,800+", "On-time Delivery": "95%" }
+    },
+    {
+      id: 3, name: "HomeCraft Supplies", initials: "HC", color: "#e65100",
+      category: "Home & Kitchen",
+      location: "Mumbai, MH", moq: "₹15,000", rating: 4.9, reviews: 445,
+      desc: "HomeCraft Supplies is a trusted wholesale distributor of kitchen appliances, cookware, home décor, and furnishings. Products are tested to BIS standards and are Amazon FBA-ready with proper labeling.",
+      tags: ["BIS Certified", "FBA Ready", "White Label", "Custom Branding", "Bulk Discounts"],
+      products: ["Cookware Sets", "Kitchen Appliances", "Storage Solutions", "Home Décor", "Bedding"],
+      stats: { "Years Active": "10 Yrs", "Orders/Month": "3,200+", "On-time Delivery": "98%" }
+    },
+    {
+      id: 4, name: "GlowBeauty Distributors", initials: "GB", color: "#d81b60",
+      category: "Beauty",
+      location: "Delhi, DL", moq: "₹10,000", rating: 4.7, reviews: 189,
+      desc: "GlowBeauty Distributors offers a curated range of skincare, haircare, cosmetics, and personal care products from certified brands. All products come with batch numbers, expiry dates, and dermatologist-tested certificates.",
+      tags: ["Dermatologist Tested", "Cruelty Free", "CDSCO Approved", "Batch Certified", "Eco Packaging"],
+      products: ["Skincare", "Haircare", "Cosmetics", "Fragrances", "Men's Grooming"],
+      stats: { "Years Active": "5 Yrs", "Orders/Month": "900+", "On-time Delivery": "96%" }
+    },
+    {
+      id: 5, name: "SportZone Wholesale", initials: "SZ", color: "#2e7d32",
+      category: "Sports",
+      location: "Jalandhar, PB", moq: "₹25,000", rating: 4.5, reviews: 134,
+      desc: "SportZone Wholesale is one of India's largest sports goods suppliers, offering fitness equipment, outdoor gear, and team sports supplies. All products meet international safety standards.",
+      tags: ["ISI Marked", "International Standards", "Bulk Pricing", "Pan-India", "B2B Focused"],
+      products: ["Fitness Equipment", "Yoga Mats", "Cricket Gear", "Outdoor Sports", "Cycling"],
+      stats: { "Years Active": "12 Yrs", "Orders/Month": "1,100+", "On-time Delivery": "94%" }
+    },
+    {
+      id: 6, name: "FreshFarm Groceries", initials: "FG", color: "#558b2f",
+      category: "Grocery",
+      location: "Hyderabad, TS", moq: "₹8,000", rating: 4.4, reviews: 276,
+      desc: "FreshFarm Groceries supplies packaged food, organic produce, snacks, beverages, and staples. All products are FSSAI licensed and GST-invoiced, packaged to Amazon's grocery requirements.",
+      tags: ["FSSAI Licensed", "Organic Options", "Cold Chain", "GST Invoiced", "Amazon Grocery Ready"],
+      products: ["Staples", "Packaged Snacks", "Organic Foods", "Beverages", "Spices"],
+      stats: { "Years Active": "7 Yrs", "Orders/Month": "4,500+", "On-time Delivery": "93%" }
+    },
+    {
+      id: 7, name: "PlayWorld Toys", initials: "PW", color: "#f57c00",
+      category: "Toys",
+      location: "Ahmedabad, GJ", moq: "₹12,000", rating: 4.6, reviews: 203,
+      desc: "PlayWorld Toys is a certified toy manufacturer and wholesaler offering educational toys, action figures, outdoor play equipment, and board games. All toys are BIS certified and safe for children.",
+      tags: ["BIS Certified", "Child Safe", "Educational Toys", "Age Graded", "Custom Branding"],
+      products: ["Educational Toys", "Board Games", "Outdoor Play", "Action Figures", "STEM Kits"],
+      stats: { "Years Active": "9 Yrs", "Orders/Month": "1,600+", "On-time Delivery": "95%" }
+    },
+    {
+      id: 8, name: "AutoParts Direct", initials: "AP", color: "#37474f",
+      category: "Automotive",
+      location: "Pune, MH", moq: "₹30,000", rating: 4.3, reviews: 98,
+      desc: "AutoParts Direct supplies genuine and OEM-equivalent auto parts, accessories, and care products for all major vehicle brands in India. Products are tested to AIS standards with traceability.",
+      tags: ["OEM Equivalent", "AIS Standards", "Traceable Parts", "Warranty Backed", "Bulk Available"],
+      products: ["Car Accessories", "Bike Parts", "Engine Components", "Car Care", "Lighting"],
+      stats: { "Years Active": "11 Yrs", "Orders/Month": "780+", "On-time Delivery": "91%" }
+    },
+    {
+      id: 9, name: "DigiGadget Hub", initials: "DG", color: "#1565c0",
+      category: "Electronics",
+      location: "Chennai, TN", moq: "₹40,000", rating: 4.7, reviews: 267,
+      desc: "DigiGadget Hub is a premier electronics distributor specializing in laptops, tablets, gaming peripherals, and networking equipment. Offers seller-ready bundles with Amazon-compliant packaging.",
+      tags: ["Amazon Compliant Packaging", "Warranty Cards", "B2B Portal", "Flexible MOQ", "GST Invoiced"],
+      products: ["Laptops", "Tablets", "Gaming Gear", "Networking", "Cameras"],
+      stats: { "Years Active": "6 Yrs", "Orders/Month": "1,300+", "On-time Delivery": "96%" }
+    },
+    {
+      id: 10, name: "ThreadMaster Exports", initials: "TM", color: "#6a1b9a",
+      category: "Fashion",
+      location: "Tirupur, TN", moq: "₹18,000", rating: 4.8, reviews: 341,
+      desc: "ThreadMaster Exports is a leading knitwear manufacturer offering T-shirts, hoodies, activewear, and casual wear. Offers custom embroidery, printing, and private label manufacturing for Amazon sellers.",
+      tags: ["Custom Embroidery", "Private Label", "Activewear Focus", "OCA Certified", "Export Quality"],
+      products: ["T-Shirts", "Hoodies", "Activewear", "Polo Shirts", "Nightwear"],
+      stats: { "Years Active": "15 Yrs", "Orders/Month": "2,900+", "On-time Delivery": "97%" }
+    },
+    {
+      id: 11, name: "NutriLife Foods", initials: "NL", color: "#00695c",
+      category: "Grocery",
+      location: "Coimbatore, TN", moq: "₹6,000", rating: 4.5, reviews: 182,
+      desc: "NutriLife Foods specializes in health foods, protein supplements, herbal products, and organic superfoods. All products are FSSAI and ISO certified with full nutritional labeling compliant with Amazon guidelines.",
+      tags: ["ISO Certified", "FSSAI", "Health Focused", "Full Nutritional Labels", "Vegan Options"],
+      products: ["Protein Supplements", "Herbal Teas", "Superfoods", "Dried Fruits", "Health Snacks"],
+      stats: { "Years Active": "4 Yrs", "Orders/Month": "620+", "On-time Delivery": "95%" }
+    },
+    {
+      id: 12, name: "KidZone Manufacturers", initials: "KZ", color: "#c0392b",
+      category: "Toys",
+      location: "Delhi, DL", moq: "₹9,000", rating: 4.4, reviews: 156,
+      desc: "KidZone Manufacturers produces and distributes plush toys, baby products, soft toys, and infant learning materials. Products conform to EN71 and BIS standards for full child safety compliance.",
+      tags: ["EN71 Compliant", "BIS Certified", "Soft & Safe", "Baby Friendly", "Non-Toxic Materials"],
+      products: ["Plush Toys", "Baby Rattles", "Soft Blocks", "Learning Toys", "Infant Gear"],
+      stats: { "Years Active": "8 Yrs", "Orders/Month": "870+", "On-time Delivery": "93%" }
+    },
+    {
+      id: 13, name: "PureGlow Cosmetics", initials: "PG", color: "#ad1457",
+      category: "Beauty",
+      location: "Kochi, KL", moq: "₹7,500", rating: 4.6, reviews: 211,
+      desc: "PureGlow Cosmetics manufactures Ayurvedic beauty products, natural skincare, and herbal hair care under ISO 22716 (GMP) certified facilities. Offers white-label and custom formulations for sellers.",
+      tags: ["ISO 22716 GMP", "Ayurvedic", "White Label", "Herbal", "Vegan Certified"],
+      products: ["Ayurvedic Face Packs", "Hair Oils", "Natural Soaps", "Herbal Creams", "Lip Care"],
+      stats: { "Years Active": "7 Yrs", "Orders/Month": "540+", "On-time Delivery": "96%" }
+    },
+    {
+      id: 14, name: "FitGear Pro", initials: "FP", color: "#00838f",
+      category: "Sports",
+      location: "Ludhiana, PB", moq: "₹20,000", rating: 4.7, reviews: 178,
+      desc: "FitGear Pro specializes in premium gym equipment, resistance bands, yoga accessories, and sports nutrition gear. Offers branded and white-label products with Amazon-ready barcoding and packaging.",
+      tags: ["Premium Quality", "White Label", "Gym Focused", "Amazon Barcoded", "Bulk Discounts"],
+      products: ["Dumbbells", "Resistance Bands", "Yoga Accessories", "Gym Bags", "Jump Ropes"],
+      stats: { "Years Active": "5 Yrs", "Orders/Month": "950+", "On-time Delivery": "97%" }
+    },
+    {
+      id: 15, name: "SmartHome Solutions", initials: "SH", color: "#283593",
+      category: "Home & Kitchen",
+      location: "Noida, UP", moq: "₹22,000", rating: 4.8, reviews: 389,
+      desc: "SmartHome Solutions distributes IoT devices, smart lighting, home security, and automation products. All devices are BEE rated for energy efficiency and carry CE/FCC marks for compliance.",
+      tags: ["BEE Rated", "CE/FCC Certified", "IoT Devices", "Smart Home", "Warranty Backed"],
+      products: ["Smart Bulbs", "Security Cameras", "Smart Plugs", "Door Locks", "Air Purifiers"],
+      stats: { "Years Active": "5 Yrs", "Orders/Month": "1,050+", "On-time Delivery": "98%" }
+    },
+    {
+      id: 16, name: "MotoXtra Parts", initials: "MX", color: "#4e342e",
+      category: "Automotive",
+      location: "Faridabad, HR", moq: "₹35,000", rating: 4.5, reviews: 112,
+      desc: "MotoXtra Parts is a specialized two-wheeler and four-wheeler parts supplier offering consumables, electrical components, and detailing products. Known for strict quality checks and fast dispatch.",
+      tags: ["Fast Dispatch", "Strict QC", "Two & Four Wheeler", "High Turnover", "Warranty Included"],
+      products: ["Engine Oil", "Brake Pads", "Electrical Parts", "Body Kits", "Car Detailing"],
+      stats: { "Years Active": "9 Yrs", "Orders/Month": "640+", "On-time Delivery": "92%" }
+    }
+  ];
+
+  let currentFilter = 'all';
+
+  function stars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5 ? 1 : 0;
+    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
+  }
+
+  function renderCards(list) {
+    const grid = document.getElementById('supplierGrid');
+    const noResults = document.getElementById('noResults');
+    const count = document.getElementById('resultCount');
+    grid.innerHTML = '';
+    if (list.length === 0) {
+      noResults.style.display = 'block';
+      count.textContent = 'No suppliers found';
+      return;
+    }
+    noResults.style.display = 'none';
+    count.textContent = `Showing ${list.length} supplier${list.length !== 1 ? 's' : ''}`;
+    list.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'supplier-card';
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="supplier-logo" style="background:${s.color}">${s.initials}</div>
+          <div class="card-title-block">
+            <div class="card-title">${s.name}</div>
+            <span class="card-category">${s.category}</span>
+          </div>
+          <div class="trusted-badge">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1l2.39 4.843L18 6.927l-4 3.898.944 5.506L10 13.77l-4.944 2.561L6 10.825 2 6.927l5.61-1.084L10 1z" clip-rule="evenodd"/></svg>
+            Trusted
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">${s.desc}</p>
+        </div>
+        <div class="card-meta">
+          <div class="meta-item">📍 <strong>${s.location}</strong></div>
+          <div class="meta-item">📦 MOQ: <strong>${s.moq}</strong></div>
+          <div class="meta-item"><span class="star-rating">${stars(s.rating)}</span> <span class="rating-count">(${s.reviews})</span></div>
+        </div>
+        <div class="card-footer">
+          <button class="btn-contact" onclick="event.stopPropagation(); openModal(suppliers.find(x=>x.id===${s.id}))">Request Quote</button>
+          <button class="btn-details" onclick="event.stopPropagation(); openModal(suppliers.find(x=>x.id===${s.id}))">View Details</button>
+        </div>
+      `;
+      card.addEventListener('click', () => openModal(s));
+      grid.appendChild(card);
+    });
+  }
+
+  function filterSuppliers() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    let list = suppliers;
+    if (currentFilter !== 'all') list = list.filter(s => s.category === currentFilter);
+    if (query) list = list.filter(s =>
+      s.name.toLowerCase().includes(query) ||
+      s.category.toLowerCase().includes(query) ||
+      s.location.toLowerCase().includes(query) ||
+      s.products.some(p => p.toLowerCase().includes(query))
+    );
+    renderCards(list);
+  }
+
+  function setFilter(cat, btn) {
+    currentFilter = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterSuppliers();
+  }
+
+  function openModal(s) {
+    document.getElementById('modalLogo').style.background = s.color;
+    document.getElementById('modalLogo').textContent = s.initials;
+    document.getElementById('modalTitle').textContent = s.name;
+    document.getElementById('modalCategory').textContent = `${s.category} · ${s.location}`;
+    document.getElementById('modalRating').innerHTML = `<span class="star-rating">${stars(s.rating)}</span> <span class="rating-count">${s.rating} (${s.reviews} reviews)</span>`;
+    document.getElementById('modalDesc').textContent = s.desc;
+    document.getElementById('modalTags').innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    document.getElementById('modalStats').innerHTML = Object.entries(s.stats).map(([k,v]) => `
+      <div class="modal-stat"><div class="modal-stat-num">${v}</div><div class="modal-stat-label">${k}</div></div>
+    `).join('');
+    document.getElementById('modalProducts').innerHTML = s.products.map(p => `<span class="tag">🏷️ ${p}</span>`).join('');
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Init
+  renderCards(suppliers);
+</script>
+</body>
+</html>
