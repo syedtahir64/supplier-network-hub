@@ -10,26 +10,65 @@
     body { font-family: "Amazon Ember", "Helvetica Neue", Arial, sans-serif; background: #f3f3f3; color: #0F1111; font-size: 14px; }
     a { text-decoration: none; color: #007185; }
     a:hover { color: #C7511F; text-decoration: underline; }
-    .amz-nav { background: #131921; display: flex; align-items: center; padding: 0 16px; height: 60px; gap: 12px; position: sticky; top: 0; z-index: 200; }
-    .amz-logo { color: #FF9900; font-size: 22px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
-    .amz-logo span { color: #fff; font-size: 11px; font-weight: 400; display: block; margin-top: -4px; }
-    .amz-nav-divider { width: 1px; height: 36px; background: #3a4553; margin: 0 4px; }
-    .sc-label { color: #ccc; font-size: 12px; white-space: nowrap; }
-    .sc-label strong { color: #fff; font-size: 13px; display: block; }
-    .amz-nav-search { flex: 1; display: flex; max-width: 600px; border: 2px solid #FF9900; border-radius: 4px; overflow: hidden; }
-    .amz-nav-search select { background: #f3f3f3; border: none; padding: 0 8px; font-size: 12px; color: #555; border-right: 1px solid #ccc; }
-    .amz-nav-search input { flex: 1; border: none; padding: 8px 12px; font-size: 14px; outline: none; }
-    .amz-nav-search button { background: #FF9900; border: none; padding: 0 14px; cursor: pointer; font-size: 18px; }
-    .amz-nav-right { margin-left: auto; display: flex; align-items: center; gap: 20px; }
-    .nav-link { color: #fff; font-size: 13px; white-space: nowrap; cursor: pointer; }
-    .nav-link small { display: block; color: #ccc; font-size: 11px; }
-    .nav-bell { font-size: 20px; color: #fff; cursor: pointer; position: relative; }
-    .nav-bell-badge { position: absolute; top: -4px; right: -6px; background: #FF9900; color: #131921; font-size: 9px; font-weight: 700; border-radius: 10px; padding: 1px 4px; }
-    .amz-subnav { background: #232F3E; padding: 0 20px; display: flex; align-items: center; height: 38px; overflow-x: auto; }
-    .subnav-item { color: #ddd; font-size: 13px; padding: 0 14px; height: 38px; display: flex; align-items: center; cursor: pointer; white-space: nowrap; border-right: 1px solid #3a4553; }
-    .subnav-item:hover { color: #fff; background: rgba(255,255,255,0.07); }
-    .subnav-item.active { color: #FF9900; border-bottom: 2px solid #FF9900; }
+    /* ── Exact SC top nav (white bar) ── */
+    .sc-topnav { background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 16px; height: 50px; gap: 0; position: sticky; top: 0; z-index: 200; }
+    .sc-topnav-logo { display: flex; align-items: baseline; gap: 2px; margin-right: 18px; }
+    .sc-topnav-logo .logo-amz { color: #131921; font-size: 20px; font-weight: 900; letter-spacing: -1px; font-style: italic; }
+    .sc-topnav-logo .logo-sc { color: #131921; font-size: 13px; font-weight: 400; margin-left: 2px; }
+    .sc-topnav-account { font-size: 12px; font-weight: 700; color: #131921; border: 1px solid #ddd; padding: 4px 10px; border-radius: 3px; margin-right: 10px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .sc-topnav-flag { font-size: 16px; }
+    .sc-topnav-domain { font-size: 12px; color: #555; border: 1px solid #ddd; border-radius: 3px; padding: 4px 10px; margin-right: 10px; display: flex; align-items: center; gap: 4px; }
+    .sc-topnav-lang { font-size: 12px; color: #555; border: 1px solid #ddd; border-radius: 3px; padding: 4px 10px; margin-right: 10px; }
+    .sc-topnav-search { display: flex; border: 1px solid #aaa; border-radius: 3px; overflow: hidden; flex: 1; max-width: 260px; margin-right: 12px; }
+    .sc-topnav-search input { flex: 1; border: none; padding: 5px 10px; font-size: 13px; outline: none; }
+    .sc-topnav-search button { background: #f0f2f2; border: none; border-left: 1px solid #aaa; padding: 0 10px; cursor: pointer; font-size: 14px; color: #555; }
+    .sc-topnav-utils { display: flex; align-items: center; gap: 16px; margin-left: 8px; }
+    .sc-topnav-utils a { font-size: 12px; color: #007185; cursor: pointer; white-space: nowrap; }
+    .sc-topnav-utils a:hover { text-decoration: underline; }
+    /* ── SC horizontal tab nav ── */
+    .sc-tabnav { background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: flex-end; padding: 0 16px; height: 38px; overflow-x: auto; position: sticky; top: 50px; z-index: 199; }
+    .sc-tab { font-size: 13px; color: #131921; padding: 0 14px; height: 38px; display: flex; align-items: center; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .sc-tab:hover { color: #C7511F; border-bottom-color: #C7511F; }
+    .sc-tab.active { color: #C7511F; border-bottom: 2px solid #C7511F; font-weight: 600; }
+    /* ── Stats bar ── */
+    .sc-statsbar { background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: stretch; }
+    .sc-stat { display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-right: 1px solid #ddd; cursor: pointer; min-width: 140px; }
+    .sc-stat:hover { background: #f5f5f5; }
+    .sc-stat-icon { font-size: 22px; color: #008296; }
+    .sc-stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; line-height: 1.2; }
+    .sc-stat-val { font-size: 22px; font-weight: 400; color: #131921; line-height: 1; }
+    .sc-stat-arrow { color: #555; font-size: 12px; margin-left: 2px; }
     .page-wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    /* SC dashboard grid */
+    .sc-dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+    .sc-dashboard-row2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+    .sc-dash-card { background: #fff; border: 1px solid #ddd; border-radius: 2px; overflow: hidden; font-size: 13px; }
+    .sc-dash-card-header { padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13px; color: #131921; }
+    .sc-dash-card-menu { color: #aaa; cursor: pointer; letter-spacing: 2px; font-weight: 900; }
+    .sc-dash-card-body { padding: 12px; }
+    .sc-dash-card-footer { padding: 0; }
+    .sc-dash-btn { display: block; width: 100%; padding: 10px; background: #008296; color: #fff; font-weight: 700; font-size: 13px; border: none; cursor: pointer; text-align: center; }
+    .sc-dash-btn:hover { background: #006d7e; }
+    .sc-dash-btn.grey { background: #555; }
+    .sc-dash-btn.grey:hover { background: #444; }
+    .sc-news-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .sc-news-item:last-child { border-bottom: none; }
+    .sc-news-date { font-size: 11px; color: #888; margin-bottom: 2px; }
+    .sc-news-title { font-size: 13px; color: #131921; line-height: 1.4; margin-bottom: 2px; }
+    .sc-news-link { font-size: 12px; color: #007185; cursor: pointer; }
+    .sc-news-link:hover { text-decoration: underline; }
+    .sc-fba-img { width: 100%; height: 90px; background: linear-gradient(135deg, #1a1a2e, #16213e); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+    .sc-stat-big { font-size: 36px; font-weight: 300; color: #131921; }
+    .sc-stat-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .sc-stat-row:last-child { border-bottom: none; }
+    .sc-radio { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #aaa; flex-shrink: 0; }
+    .sc-forum-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .sc-forum-item:last-child { border-bottom: none; }
+    /* ASR widget card highlight */
+    .sc-dash-card.asr-highlight { border: 2px solid #FF9900; }
+    .sc-dash-card.asr-highlight .sc-dash-card-header { background: linear-gradient(135deg, #131921, #1b2b3a); color: #FF9900; }
+    .sc-dash-btn.asr { background: #FF9900; color: #131921; }
+    .sc-dash-btn.asr:hover { background: #f0a500; }
     .section-pills { display: flex; background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .pill { flex: 1; padding: 14px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #555; cursor: pointer; border-right: 1px solid #eee; transition: background 0.15s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .pill:last-child { border-right: none; }
@@ -225,37 +264,234 @@
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="amz-nav">
-  <div class="amz-logo">amazon<span>seller central</span></div>
-  <div class="amz-nav-divider"></div>
-  <div class="sc-label"><small>Hello,</small><strong>Syed</strong></div>
-  <div class="amz-nav-search">
-    <select><option>All</option></select>
-    <input type="text" value="Amazon Supplier Registry" readonly />
+<!-- ── Exact SC-style top nav ── -->
+<nav class="sc-topnav">
+  <div class="sc-topnav-logo">
+    <span class="logo-amz">amazon</span>
+    <span class="logo-sc">seller central</span>
+  </div>
+  <div class="sc-topnav-account"><span class="sc-topnav-flag">🇮🇳</span> SYED TAHIR</div>
+  <div class="sc-topnav-domain">🌐 www.amazon.in ▾</div>
+  <div class="sc-topnav-lang">English ▾</div>
+  <div class="sc-topnav-search">
+    <input type="text" placeholder="Search" />
     <button>🔍</button>
   </div>
-  <div class="amz-nav-right">
-    <span class="nav-link"><small>Returns &</small>Orders</span>
-    <span class="nav-link"><small>Your</small>Account</span>
-    <span class="nav-bell">🔔<span class="nav-bell-badge">3</span></span>
+  <div class="sc-topnav-utils">
+    <a>Messages</a>
+    <a>Help</a>
+    <a>Settings</a>
   </div>
 </nav>
-<div class="amz-subnav">
-  <div class="subnav-item">Catalog</div>
-  <div class="subnav-item">Inventory</div>
-  <div class="subnav-item">Pricing</div>
-  <div class="subnav-item">Orders</div>
-  <div class="subnav-item">Advertising</div>
-  <div class="subnav-item">Stores</div>
-  <div class="subnav-item active">Growth</div>
-  <div class="subnav-item">Reports</div>
-  <div class="subnav-item">Performance</div>
-  <div class="subnav-item">Apps &amp; Services</div>
+
+<!-- ── SC horizontal tab nav ── -->
+<div class="sc-tabnav">
+  <div class="sc-tab">Catalog</div>
+  <div class="sc-tab active">Home</div>
+  <div class="sc-tab">Inventory</div>
+  <div class="sc-tab">Orders</div>
+  <div class="sc-tab">Advertising</div>
+  <div class="sc-tab">Stores</div>
+  <div class="sc-tab">Programs</div>
+  <div class="sc-tab">Reports</div>
+  <div class="sc-tab">Performance</div>
+  <div class="sc-tab">Apps &amp; Services</div>
+  <div class="sc-tab">Brands</div>
+</div>
+
+<!-- ── Stats bar ── -->
+<div class="sc-statsbar">
+  <div class="sc-stat">
+    <div class="sc-stat-icon">🌐</div>
+    <div>
+      <div class="sc-stat-label">Marketplaces</div>
+      <div style="display:flex; align-items:center; gap:4px;"><span class="sc-stat-val">1</span><span class="sc-stat-arrow">▾</span></div>
+    </div>
+  </div>
+  <div class="sc-stat">
+    <div>
+      <div class="sc-stat-label">Open Orders</div>
+      <div style="display:flex; align-items:center; gap:4px;"><span class="sc-stat-val">0</span><span class="sc-stat-arrow">▾</span></div>
+    </div>
+  </div>
+  <div class="sc-stat">
+    <div>
+      <div class="sc-stat-label">Buyer Messages</div>
+      <div><span class="sc-stat-val">0</span></div>
+    </div>
+  </div>
+  <div class="sc-stat" style="flex:1;">
+    <div>
+      <div class="sc-stat-label">Total Balance</div>
+      <div><span class="sc-stat-val" style="font-size:14px; color:#888;">—</span></div>
+    </div>
+  </div>
+  <div class="sc-stat" style="border-right:none;">
+    <div>
+      <div class="sc-stat-label">All Merchandising Sales</div>
+      <div><span class="sc-stat-val" style="font-size:14px; color:#888;">—</span></div>
+    </div>
+  </div>
 </div>
 
 <div class="page-wrap">
-  <!-- JOURNEY PILLS -->
+  <!-- SC-style dashboard home (replaces old pill nav intro) -->
+  <div id="sc-home">
+    <!-- Row 1: 4 cards -->
+    <div class="sc-dashboard">
+
+      <!-- News -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">News <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-body">
+          <div class="sc-news-item">
+            <div class="sc-news-date">AUG 13, 2026</div>
+            <div class="sc-news-title">Amazon Supplier Registry (ASR) is now available — source verified inventory and bypass offer-stage gating</div>
+            <div class="sc-news-link" onclick="showSection('browse')">Read more &gt;</div>
+          </div>
+          <div class="sc-news-item">
+            <div class="sc-news-date">AUG 10, 2026</div>
+            <div class="sc-news-title">New: Bring Your Own Supplier for Amazon Assisted Verification — submit existing suppliers for ASR clearance</div>
+            <div class="sc-news-link" onclick="showSection('browse')">Read more &gt;</div>
+          </div>
+          <div class="sc-news-item">
+            <div class="sc-news-date">AUG 5, 2026</div>
+            <div class="sc-news-title">Supply chain verification now integrated into account registration — complete sourcing setup on day one</div>
+            <div class="sc-news-link" onclick="showSection('discover')">Read more &gt;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASR — the hero widget -->
+      <div class="sc-dash-card asr-highlight">
+        <div class="sc-dash-card-header">Amazon Supplier Registry (ASR) <span class="sc-dash-card-menu" style="color:#FF9900;">···</span></div>
+        <div class="sc-dash-card-body">
+          <div style="font-size:13px; color:#555; margin-bottom:10px; line-height:1.5;">Browse Amazon-verified Authorized Distributors and Direct Suppliers. Sellers who source via ASR have supply chain pre-verified — no invoice submission required at listing.</div>
+          <div style="display:flex; gap:16px; margin-bottom:8px;">
+            <div style="text-align:center;">
+              <div style="font-size:26px; font-weight:300; color:#131921;">500+</div>
+              <div style="font-size:11px; color:#888;">Registered Suppliers</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:26px; font-weight:300; color:#131921;">30+</div>
+              <div style="font-size:11px; color:#888;">Categories</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:26px; font-weight:300; color:#008296;">0</div>
+              <div style="font-size:11px; color:#888;">Invoice Uploads</div>
+            </div>
+          </div>
+        </div>
+        <div class="sc-dash-card-footer">
+          <button class="sc-dash-btn asr" onclick="showSection('browse')">Browse ASR Suppliers</button>
+        </div>
+      </div>
+
+      <!-- Supply Chain Verification Status -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">Supply Chain Verification <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-body">
+          <div class="sc-stat-row">
+            <div style="font-size:28px; font-weight:300; color:#C40000;">2</div>
+            <div style="font-size:13px; color:#555;">ASINs pending supply chain verification</div>
+          </div>
+          <div class="sc-stat-row">
+            <div style="font-size:28px; font-weight:300; color:#131921;">0</div>
+            <div style="font-size:13px; color:#555;">ASINs cleared via ASR suppliers</div>
+          </div>
+        </div>
+        <div class="sc-dash-card-footer">
+          <button class="sc-dash-btn" onclick="showSection('discover')">Resolve Verification</button>
+        </div>
+      </div>
+
+      <!-- Seller Poll -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">Seller Poll <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-body">
+          <div style="font-size:13px; color:#555; margin-bottom:10px;">Would you use Amazon Supplier Registry to source inventory and reduce verification friction?</div>
+          <div class="sc-stat-row"><div class="sc-radio"></div><div>Strongly Agree</div></div>
+          <div class="sc-stat-row"><div class="sc-radio"></div><div>Agree</div></div>
+          <div class="sc-stat-row"><div class="sc-radio"></div><div>Neither Agree nor Disagree</div></div>
+          <div class="sc-stat-row"><div class="sc-radio"></div><div>Disagree</div></div>
+          <div class="sc-stat-row"><div class="sc-radio"></div><div>Strongly Disagree</div></div>
+        </div>
+        <div class="sc-dash-card-footer">
+          <button class="sc-dash-btn grey">Submit</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Row 2: 4 cards -->
+    <div class="sc-dashboard-row2">
+
+      <!-- Account Health -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">Account Health <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-body">
+          <div style="font-size:13px; color:#555; margin-bottom:8px;">Sourcing from ASR-registered suppliers reduces authenticity complaints and account violations.</div>
+          <div class="sc-stat-row">
+            <div style="font-size:28px; font-weight:300; color:#C7511F;">312</div>
+            <div style="font-size:12px; color:#888;">Account Health Score<br><span style="color:#C7511F;">At Risk (threshold: 400)</span></div>
+          </div>
+        </div>
+        <div class="sc-dash-card-footer">
+          <button class="sc-dash-btn" onclick="showSection('discover')">View Account Health</button>
+        </div>
+      </div>
+
+      <!-- Explore ASR — ASCS -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">Explore ASCS Integration <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-fba-img" style="width:100%; height:90px; background:linear-gradient(135deg,#1a1a2e,#16213e); display:flex; align-items:center; justify-content:center; font-size:36px;">🚚</div>
+        <div class="sc-dash-card-body" style="padding:10px 12px;">
+          <div style="font-size:13px; color:#555;">ASR suppliers route through Amazon Supply Chain Services for end-to-end custody-chain visibility</div>
+        </div>
+        <div class="sc-dash-card-footer">
+          <button class="sc-dash-btn" onclick="showSection('benefits')">Learn More</button>
+        </div>
+      </div>
+
+      <!-- Reduced Burden -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">Verification Burden Reduction <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-body">
+          <div class="sc-stat-row">
+            <div style="font-size:28px; font-weight:300; color:#008296;">100M+</div>
+            <div style="font-size:12px; color:#555;">Listing approvals/yr that can bypass individual verification via ASR</div>
+          </div>
+          <div class="sc-stat-row">
+            <div style="font-size:28px; font-weight:300; color:#131921;">0</div>
+            <div style="font-size:12px; color:#555;">Invoices needed when sourcing from ASR suppliers</div>
+          </div>
+        </div>
+        <div class="sc-dash-card-footer">
+          <button class="sc-dash-btn" onclick="showSection('benefits')">See Full Impact</button>
+        </div>
+      </div>
+
+      <!-- Seller Forums -->
+      <div class="sc-dash-card">
+        <div class="sc-dash-card-header">Seller Forums <span class="sc-dash-card-menu">···</span></div>
+        <div class="sc-dash-card-body">
+          <div class="sc-forum-item">
+            <div class="sc-news-date">AUG 12, 2026</div>
+            <div class="sc-news-title">How ASR helped me clear 3 months of pending gating in one day</div>
+            <div class="sc-news-link">Read more &gt;</div>
+          </div>
+          <div class="sc-forum-item">
+            <div class="sc-news-date">AUG 9, 2026</div>
+            <div class="sc-news-title">New seller here — used ASR to go live on day one, AMA</div>
+            <div class="sc-news-link">Read more &gt;</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JOURNEY PILLS (below the dashboard) -->
   <div class="section-pills">
     <div class="pill active" onclick="showSection('discover')">
       <div class="pill-num">1</div>Seller Discovery
