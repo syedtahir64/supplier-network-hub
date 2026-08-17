@@ -508,16 +508,313 @@
        SECTION 1 — SELLER DISCOVERY
   ═══════════════════════════════ -->
   <div class="section-panel active" id="section-discover">
-    <div class="section-title">Step 1 — How Sellers Discover Amazon Supplier Registry (ASR)</div>
+    <div class="section-title">Where Sellers Discover Amazon Supplier Registry (ASR)</div>
     <div class="callout blue">
       <span class="callout-icon">💡</span>
-      <div><strong>Amazon Supplier Registry (ASR)</strong> surfaces at the exact moments sellers need it — during account registration, offer creation, enforcement actions, and supply chain friction. We verify the supplier so sellers don't have to.</div>
+      <div>ASR surfaces at <strong>two distinct moments</strong> — during the new seller registration journey (before they ever list a product), and for established sellers already on Seller Central (at listing creation and during enforcement). Both moments are high-friction today; ASR removes that friction at exactly the right time.</div>
     </div>
 
-    <!-- Entry Point A: Account Registration (PRIMARY per doc) -->
-    <div class="mockup-frame">
-      <div class="mockup-titlebar">
-        <div class="mockup-dot" style="background:#ff5f56"></div>
+    <!-- SCENARIO TOGGLE -->
+    <div class="pathway-toggle" style="margin-bottom:28px;">
+      <div class="pathway-btn active" onclick="setDiscoverScenario('new', this)">
+        <div class="pathway-btn-title">🆕 New Seller — During Registration</div>
+        <div class="pathway-btn-desc">A first-time seller registering on Amazon encounters ASR at Step 4 of the registration flow — before they've listed a single product. This is the cold-start unlock.</div>
+        <span class="pathway-btn-badge">Primary Entry Point</span>
+      </div>
+      <div class="pathway-btn" onclick="setDiscoverScenario('existing', this)">
+        <div class="pathway-btn-title">🏪 Established Seller — Inside Seller Central</div>
+        <div class="pathway-btn-desc">An existing seller encounters ASR during offer creation (supply chain step) or through an enforcement/account health action — exactly when they need a verified supplier most.</div>
+        <span class="pathway-btn-badge">Ongoing Entry Points</span>
+      </div>
+    </div>
+
+    <!-- ── SCENARIO A: NEW SELLER REGISTRATION ── -->
+    <div class="pathway-panel active" id="discover-new">
+
+      <div class="section-title" style="font-size:15px;">📋 New Seller Registration — Step by Step</div>
+      <div class="callout amber">
+        <span class="callout-icon">⚡</span>
+        <div>The registration process has <strong>5 steps</strong>. ASR surfaces at <strong>Step 4 — Seller Interview</strong>, where sellers are asked how they source products. This is the earliest possible moment to introduce verified sourcing — before the seller has committed to any supplier.</div>
+      </div>
+
+      <!-- Step progress bar -->
+      <div class="reg-steps" style="margin-bottom:20px;">
+        <div class="reg-step done"><div>✅</div><div class="reg-step-label">Step 1</div><div class="reg-step-status" style="color:#067D62;">Create Account</div></div>
+        <div class="reg-step done"><div>✅</div><div class="reg-step-label">Step 2</div><div class="reg-step-status" style="color:#067D62;">Seller Info</div></div>
+        <div class="reg-step done"><div>✅</div><div class="reg-step-label">Step 3</div><div class="reg-step-status" style="color:#067D62;">Tax Details</div></div>
+        <div class="reg-step active"><div>👉</div><div class="reg-step-label">Step 4</div><div class="reg-step-status" style="color:#C7511F;">Seller Interview</div></div>
+        <div class="reg-step"><div>⬜</div><div class="reg-step-label">Step 5</div><div class="reg-step-status" style="color:#888;">Go Live</div></div>
+      </div>
+
+      <!-- Step 1 mockup -->
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url">sellercentral.amazon.in › registration › create-account</div>
+        </div>
+        <div class="mockup-body" style="background:#f8f9fa;">
+          <div style="max-width:420px; margin:0 auto; background:#fff; border:1px solid #ddd; border-radius:4px; padding:28px 32px;">
+            <div style="text-align:center; margin-bottom:20px;">
+              <div style="font-size:20px; font-weight:900; font-style:italic; color:#131921;">amazon <span style="font-size:13px; font-weight:400; font-style:normal;">seller central</span></div>
+            </div>
+            <div style="font-size:18px; font-weight:400; margin-bottom:18px; color:#0F1111;">Create account</div>
+            <div class="form-group"><label class="form-label">Your name</label><input class="form-input" value="Syed Tahir" readonly /></div>
+            <div class="form-group"><label class="form-label">Mobile number</label><input class="form-input" value="+91 98765 43210" readonly /></div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="syed@business.com" readonly /></div>
+            <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" value="••••••••" readonly /></div>
+            <button class="btn-primary" style="width:100%; padding:10px; font-size:14px; border-radius:3px;">Continue</button>
+            <div style="font-size:12px; color:#555; margin-top:12px; text-align:center;">Already have an account? <span style="color:#007185;">Sign in</span></div>
+          </div>
+          <div style="text-align:center; margin-top:10px; font-size:12px; color:#888;">Step 1 of 5 — Create your Amazon account</div>
+        </div>
+      </div>
+
+      <!-- Step 2 mockup -->
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url">sellercentral.amazon.in › registration › seller-information</div>
+        </div>
+        <div class="mockup-body">
+          <div style="font-size:16px; font-weight:600; margin-bottom:4px;">Register and Start Selling</div>
+          <div style="font-size:13px; color:#555; margin-bottom:16px;">Tell us about your business</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Business / Company Name *</label><input class="form-input" value="Tahir Enterprises" readonly /></div>
+            <div class="form-group"><label class="form-label">Store Display Name *</label><input class="form-input" value="TahirShop" readonly /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Primary Product Category</label><select class="form-select"><option>Electronics</option></select></div>
+            <div class="form-group"><label class="form-label">Business Address</label><input class="form-input" value="Mumbai, Maharashtra" readonly /></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:13px; color:#555;"><input type="checkbox" checked readonly /> I agree to the Amazon Services Business Solutions Agreement</div>
+          <button class="btn-primary" style="padding:9px 24px; font-size:13px; border-radius:3px;">Continue</button>
+          <div style="margin-top:10px; font-size:12px; color:#888;">Step 2 of 5 — Submit Seller Information</div>
+        </div>
+      </div>
+
+      <!-- Step 3 mockup -->
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url">sellercentral.amazon.in › registration › tax-details</div>
+        </div>
+        <div class="mockup-body">
+          <div style="font-size:16px; font-weight:600; margin-bottom:4px;">Tax Details</div>
+          <div style="font-size:13px; color:#555; margin-bottom:16px;">Required to list and sell products on Amazon.in</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">GSTIN *</label><input class="form-input" value="27AABCT1332L1ZN" readonly /></div>
+            <div class="form-group"><label class="form-label">PAN Number *</label><input class="form-input" value="AABCT1332L" readonly /></div>
+          </div>
+          <div style="font-size:12px; color:#555; margin-bottom:14px; line-height:1.5; padding:10px; background:#f0f4ff; border-radius:4px; border:1px solid #c0d4f5;">ℹ️ GST is mandatory for e-commerce selling. Your bank account, PAN, and GST details must belong to the same person or entity.</div>
+          <button class="btn-primary" style="padding:9px 24px; font-size:13px; border-radius:3px;">Continue</button>
+          <div style="margin-top:10px; font-size:12px; color:#888;">Step 3 of 5 — Submit Tax Details</div>
+        </div>
+      </div>
+
+      <!-- Step 4 mockup — ASR SURFACES HERE -->
+      <div class="mockup-frame" style="border:2px solid #FF9900;">
+        <div class="mockup-titlebar" style="background:#FFF8E7;">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url" style="border-color:#FF9900; color:#C7511F; font-weight:600;">sellercentral.amazon.in › registration › seller-interview ★ ASR surfaces here</div>
+        </div>
+        <div class="mockup-body">
+          <div style="font-size:16px; font-weight:600; margin-bottom:4px;">Seller Interview</div>
+          <div style="font-size:13px; color:#555; margin-bottom:16px;">Help us understand your business so we can personalise your selling experience</div>
+
+          <div class="form-group">
+            <label class="form-label">Which categories do you wish to sell in? *</label>
+            <select class="form-select"><option>Electronics, Mobile Accessories</option></select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="color:#C7511F; font-weight:700;">Where do you get your products from? * <span style="background:#FFF3CD; padding:2px 6px; border-radius:3px; font-size:11px; border:1px solid #f0c060;">ASR Entry Point</span></label>
+            <div style="border:2px solid #FF9900; border-radius:4px; overflow:hidden;">
+              <div style="padding:12px 14px; background:#FFF8E7; border-bottom:1px solid #f0c060; font-size:13px; font-weight:600; color:#C7511F; display:flex; align-items:center; gap:8px;">
+                🏭 Source from Amazon Supplier Registry (ASR) — Recommended
+                <span style="margin-left:auto; background:#FF9900; color:#131921; font-size:11px; font-weight:700; padding:2px 8px; border-radius:3px;">New</span>
+              </div>
+              <div style="padding:12px 14px; background:#fff; font-size:13px; color:#555; line-height:1.6;">
+                Browse Amazon-verified Authorized Distributors and Direct Suppliers. Sellers who source from ASR-registered suppliers can complete supply chain verification during registration — no additional documentation required to list products.
+                <div style="margin-top:10px;">
+                  <button class="btn-primary" style="padding:8px 18px; font-size:13px; border-radius:3px; flex:none;" onclick="showSection('browse')">Browse ASR Suppliers</button>
+                  <span style="font-size:12px; color:#888; margin-left:12px;">or choose below ↓</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:4px;">
+            <div style="border:1px solid #ddd; border-radius:4px; overflow:hidden;">
+              <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13px; color:#555; cursor:pointer; border-bottom:1px solid #f0f0f0;"><input type="radio" name="source" /> I manufacture / produce my own products</label>
+              <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13px; color:#555; cursor:pointer; border-bottom:1px solid #f0f0f0;"><input type="radio" name="source" /> I buy from a wholesaler or distributor</label>
+              <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13px; color:#555; cursor:pointer;"><input type="radio" name="source" /> Other</label>
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-top:14px;">
+            <div class="form-group"><label class="form-label">What is your annual turnover?</label><select class="form-select"><option>Below ₹40 Lakh</option></select></div>
+            <div class="form-group"><label class="form-label">How many products do you sell?</label><select class="form-select"><option>1–10 Products</option></select></div>
+          </div>
+
+          <button class="btn-primary" style="padding:9px 24px; font-size:13px; border-radius:3px; margin-top:4px;">Continue</button>
+          <div style="margin-top:10px; font-size:12px; color:#888;">Step 4 of 5 — Seller Interview</div>
+        </div>
+      </div>
+
+      <!-- Step 5 mockup -->
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url">sellercentral.amazon.in › registration › complete</div>
+        </div>
+        <div class="sc-inner-nav">
+          <div class="sc-nav-tab active">Add Products</div>
+          <div class="sc-nav-tab">Performance Notifications</div>
+          <div class="sc-nav-tab">Add Products via Upload</div>
+        </div>
+        <div class="mockup-body">
+          <div style="display:flex; gap:32px; align-items:flex-start;">
+            <div style="font-size:60px; flex-shrink:0;">📦</div>
+            <div style="flex:1;">
+              <div style="font-size:24px; font-weight:300; color:#0F1111; margin-bottom:4px;">List Your Products <span style="font-size:13px; color:#007185; font-weight:400;">Learn more</span></div>
+              <div style="font-size:14px; color:#555; margin-bottom:20px;">Select an option to get started.</div>
+              <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
+                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">🔍<br/>Search</div>
+                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">📷<br/>Product Image</div>
+                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">|||<br/>Product IDs</div>
+                <div style="text-align:center; padding:12px 14px; border:2px solid #008296; border-radius:4px; cursor:pointer; font-size:12px; color:#008296; position:relative; background:#f0fafb;"><span style="position:absolute; top:-8px; right:-4px; background:#008296; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px;">New</span>📊<br/>Spreadsheet</div>
+              </div>
+              <div style="background:#EAF7EA; border:1px solid #a8d8b0; border-radius:4px; padding:12px 14px; font-size:13px; color:#0d4a2f; margin-bottom:12px;">
+                ✅ <strong>Supply chain pre-verified via ASR.</strong> Products sourced from your registered ASR supplier will not require invoice submission at listing — you can list and go live immediately.
+              </div>
+              <button style="background:#008296; color:#fff; font-weight:700; font-size:13px; padding:9px 20px; border:none; border-radius:3px; cursor:pointer;">Launch Your Business</button>
+            </div>
+          </div>
+          <div style="margin-top:12px; font-size:12px; color:#888;">Step 5 of 5 — You're ready to sell on Amazon.in</div>
+        </div>
+      </div>
+
+    </div><!-- /discover-new -->
+
+    <!-- ── SCENARIO B: ESTABLISHED SELLER ── -->
+    <div class="pathway-panel" id="discover-existing">
+
+      <div class="section-title" style="font-size:15px;">🏪 Established Seller — Two Entry Points Inside Seller Central</div>
+      <div class="callout amber">
+        <span class="callout-icon">⚡</span>
+        <div>For sellers already on Seller Central, ASR surfaces at <strong>two high-friction moments</strong>: during offer creation when supply chain verification is triggered, and on the Account Health page when an enforcement action is open.</div>
+      </div>
+
+      <!-- Entry Point 1: Offer creation / List Your Products -->
+      <div style="font-size:14px; font-weight:700; color:#0F1111; margin-bottom:10px; padding:8px 0; border-bottom:1px solid #eee;">Entry Point 1 — Listing Creation (Catalog → Add Products)</div>
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url">sellercentral.amazon.in › catalog › add-products</div>
+        </div>
+        <div class="sc-inner-nav">
+          <div class="sc-nav-tab active">Add Products</div>
+          <div class="sc-nav-tab">Performance Notifications</div>
+          <div class="sc-nav-tab">Add Products via Upload</div>
+        </div>
+        <div class="mockup-body">
+          <div style="display:flex; gap:32px; align-items:flex-start;">
+            <div style="font-size:60px; flex-shrink:0;">📦</div>
+            <div style="flex:1;">
+              <div style="font-size:24px; font-weight:300; color:#0F1111; margin-bottom:4px;">List Your Products <span style="font-size:13px; color:#007185; font-weight:400;">Learn more</span></div>
+              <div style="font-size:14px; color:#555; margin-bottom:20px;">Select an option to get started.</div>
+              <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
+                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">🔍<br/>Search</div>
+                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">📷<br/>Product Image</div>
+                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">|||<br/>Product IDs</div>
+                <div style="text-align:center; padding:12px 14px; border:2px solid #008296; border-radius:4px; cursor:pointer; font-size:12px; color:#008296; position:relative; background:#f0fafb;"><span style="position:absolute; top:-8px; right:-4px; background:#008296; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px;">New</span>📊<br/>Spreadsheet</div>
+              </div>
+              <div style="background:#FFF8E7; border:1px solid #f0c060; border-radius:4px; padding:14px; margin-bottom:12px;">
+                <div style="font-size:13px; font-weight:700; color:#C7511F; margin-bottom:6px;">⚠️ Supply Chain Verification Required</div>
+                <div style="font-size:13px; color:#555; margin-bottom:10px; line-height:1.5;">This product requires supply chain verification before it can go live. Upload invoices from your current supplier, or if you source from an ASR-registered supplier, verification is satisfied at the supplier level.</div>
+                <div class="asr-banner" style="margin-top:0;">
+                  <div class="asr-banner-icon" style="font-size:26px;">🏭</div>
+                  <div>
+                    <h3 style="font-size:13px;">Amazon Supplier Registry (ASR)</h3>
+                    <p style="font-size:12px;">Browse verified Authorized Distributors and Direct Suppliers. Sourcing from an ASR supplier satisfies this verification without additional documentation.</p>
+                  </div>
+                  <button class="asr-banner-btn" style="font-size:12px; padding:7px 14px;" onclick="showSection('browse')">Browse ASR Suppliers</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry Point 2: Account Health enforcement -->
+      <div style="font-size:14px; font-weight:700; color:#0F1111; margin:20px 0 10px; padding:8px 0; border-bottom:1px solid #eee;">Entry Point 2 — Account Health (Performance → Account Health)</div>
+      <div class="mockup-frame">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f56"></div>
+          <div class="mockup-dot" style="background:#ffbd2e"></div>
+          <div class="mockup-dot" style="background:#27c93f"></div>
+          <div class="mockup-url">sellercentral.amazon.in › performance › account-health</div>
+        </div>
+        <div class="mockup-body">
+          <div style="font-size:16px; font-weight:700; margin-bottom:16px;">Account Health</div>
+          <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
+            <div class="sc-widget" style="flex:1; min-width:160px;">
+              <div class="sc-widget-header">Account Health Rating</div>
+              <div class="sc-widget-body" style="display:flex; align-items:center; gap:12px;">
+                <div style="font-size:40px; font-weight:300; color:#C7511F;">312</div>
+                <div style="font-size:12px; color:#C7511F;">At Risk<br/><span style="color:#888;">Threshold: 400</span></div>
+              </div>
+            </div>
+            <div class="sc-widget" style="flex:1; min-width:160px;">
+              <div class="sc-widget-header">Policy Violations</div>
+              <div class="sc-widget-body">
+                <div style="font-size:28px; font-weight:300; color:#C40000;">1</div>
+                <div style="font-size:12px; color:#555; margin-top:2px;">Open — action required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sc-page-header" style="background:#FEF0EF; border-color:#f5c6c2;">
+            <div class="sc-alert-icon">⚠️</div>
+            <div style="flex:1;">
+              <div class="sc-alert-title" style="color:#C40000;">Authenticity Complaint — Action Required within 7 days</div>
+              <div class="sc-alert-body">Product: <strong>Wireless Bluetooth Earphones (ASIN: B09XZ12345)</strong>. We received a complaint about the authenticity of this item. This may result from sourcing through an unverified supply chain. Provide valid supply chain documentation, or switch to a verified ASR supplier to resolve this and prevent future occurrences.</div>
+              <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                <span class="sc-alert-cta" style="cursor:pointer; background:#008296; border-color:#005f6b;" onclick="showSection('browse')">🏭 Browse ASR Suppliers</span>
+                <span class="sc-alert-cta" style="background:#fff; color:#131921; border:1px solid #aaa; cursor:pointer;">Upload Invoice</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sc-widget">
+            <div class="sc-widget-header" style="background:#f0faf4; color:#067D62;">💡 Prevent future enforcement actions</div>
+            <div class="sc-widget-body" style="font-size:13px; color:#555; line-height:1.6;">
+              Sellers sourcing from ASR-registered suppliers have their supply chain continuously monitored by Amazon. This reduces the risk of authenticity complaints from supplier-side deviations — protecting your account health proactively, not reactively.
+              <div style="margin-top:10px;"><button class="btn-primary" style="padding:8px 18px; font-size:13px; border-radius:3px; flex:none;" onclick="showSection('browse')">View ASR Suppliers</button></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /discover-existing -->
+
+    <div style="text-align:center; margin-top:24px;">
+      <button class="btn-primary" style="max-width:300px; padding:12px; font-size:14px;" onclick="showSection('browse')">Next: Browse ASR Suppliers →</button>
+    </div>
+  </div>
         <div class="mockup-dot" style="background:#ffbd2e"></div>
         <div class="mockup-dot" style="background:#27c93f"></div>
         <div class="mockup-url">sellercentral.amazon.in › registration › complete-registration</div>
@@ -1107,6 +1404,13 @@ const suppliers = [
     products:["Engine Oil","Brake Pads","Electrical Parts","Body Kits","Car Detailing"],
     stats:{"ASR Status":"Active","Orders/Month":"640+","On-time Delivery":"92%"} }
 ];
+
+function setDiscoverScenario(id, btn) {
+  document.querySelectorAll('.pathway-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#section-discover .pathway-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('discover-' + id).classList.add('active');
+}
 
 function showSection(id) {
   document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
