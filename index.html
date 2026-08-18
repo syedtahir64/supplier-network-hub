@@ -1,1531 +1,619 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Amazon Supplier Registry (ASR) | Seller Central</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: "Amazon Ember", "Helvetica Neue", Arial, sans-serif; background: #f3f3f3; color: #0F1111; font-size: 14px; }
-    a { text-decoration: none; color: #007185; }
-    a:hover { color: #C7511F; text-decoration: underline; }
-    /* ── Exact SC top nav (white bar) ── */
-    .sc-topnav { background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 16px; height: 50px; gap: 0; position: sticky; top: 0; z-index: 200; }
-    .sc-topnav-logo { display: flex; align-items: baseline; gap: 2px; margin-right: 18px; }
-    .sc-topnav-logo .logo-amz { color: #131921; font-size: 20px; font-weight: 900; letter-spacing: -1px; font-style: italic; }
-    .sc-topnav-logo .logo-sc { color: #131921; font-size: 13px; font-weight: 400; margin-left: 2px; }
-    .sc-topnav-account { font-size: 12px; font-weight: 700; color: #131921; border: 1px solid #ddd; padding: 4px 10px; border-radius: 3px; margin-right: 10px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-    .sc-topnav-flag { font-size: 16px; }
-    .sc-topnav-domain { font-size: 12px; color: #555; border: 1px solid #ddd; border-radius: 3px; padding: 4px 10px; margin-right: 10px; display: flex; align-items: center; gap: 4px; }
-    .sc-topnav-lang { font-size: 12px; color: #555; border: 1px solid #ddd; border-radius: 3px; padding: 4px 10px; margin-right: 10px; }
-    .sc-topnav-search { display: flex; border: 1px solid #aaa; border-radius: 3px; overflow: hidden; flex: 1; max-width: 260px; margin-right: 12px; }
-    .sc-topnav-search input { flex: 1; border: none; padding: 5px 10px; font-size: 13px; outline: none; }
-    .sc-topnav-search button { background: #f0f2f2; border: none; border-left: 1px solid #aaa; padding: 0 10px; cursor: pointer; font-size: 14px; color: #555; }
-    .sc-topnav-utils { display: flex; align-items: center; gap: 16px; margin-left: 8px; }
-    .sc-topnav-utils a { font-size: 12px; color: #007185; cursor: pointer; white-space: nowrap; }
-    .sc-topnav-utils a:hover { text-decoration: underline; }
-    /* ── SC horizontal tab nav ── */
-    .sc-tabnav { background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: flex-end; padding: 0 16px; height: 38px; overflow-x: auto; position: sticky; top: 50px; z-index: 199; }
-    .sc-tab { font-size: 13px; color: #131921; padding: 0 14px; height: 38px; display: flex; align-items: center; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; }
-    .sc-tab:hover { color: #C7511F; border-bottom-color: #C7511F; }
-    .sc-tab.active { color: #C7511F; border-bottom: 2px solid #C7511F; font-weight: 600; }
-    /* ── Stats bar ── */
-    .sc-statsbar { background: #fff; border-bottom: 1px solid #ddd; display: flex; align-items: stretch; }
-    .sc-stat { display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-right: 1px solid #ddd; cursor: pointer; min-width: 140px; }
-    .sc-stat:hover { background: #f5f5f5; }
-    .sc-stat-icon { font-size: 22px; color: #008296; }
-    .sc-stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; line-height: 1.2; }
-    .sc-stat-val { font-size: 22px; font-weight: 400; color: #131921; line-height: 1; }
-    .sc-stat-arrow { color: #555; font-size: 12px; margin-left: 2px; }
-    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
-    /* SC dashboard grid */
-    .sc-dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
-    .sc-dashboard-row2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
-    .sc-dash-card { background: #fff; border: 1px solid #ddd; border-radius: 2px; overflow: hidden; font-size: 13px; }
-    .sc-dash-card-header { padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13px; color: #131921; }
-    .sc-dash-card-menu { color: #aaa; cursor: pointer; letter-spacing: 2px; font-weight: 900; }
-    .sc-dash-card-body { padding: 12px; }
-    .sc-dash-card-footer { padding: 0; }
-    .sc-dash-btn { display: block; width: 100%; padding: 10px; background: #008296; color: #fff; font-weight: 700; font-size: 13px; border: none; cursor: pointer; text-align: center; }
-    .sc-dash-btn:hover { background: #006d7e; }
-    .sc-dash-btn.grey { background: #555; }
-    .sc-dash-btn.grey:hover { background: #444; }
-    .sc-news-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-    .sc-news-item:last-child { border-bottom: none; }
-    .sc-news-date { font-size: 11px; color: #888; margin-bottom: 2px; }
-    .sc-news-title { font-size: 13px; color: #131921; line-height: 1.4; margin-bottom: 2px; }
-    .sc-news-link { font-size: 12px; color: #007185; cursor: pointer; }
-    .sc-news-link:hover { text-decoration: underline; }
-    .sc-fba-img { width: 100%; height: 90px; background: linear-gradient(135deg, #1a1a2e, #16213e); display: flex; align-items: center; justify-content: center; font-size: 40px; }
-    .sc-stat-big { font-size: 36px; font-weight: 300; color: #131921; }
-    .sc-stat-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-    .sc-stat-row:last-child { border-bottom: none; }
-    .sc-radio { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #aaa; flex-shrink: 0; }
-    .sc-forum-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-    .sc-forum-item:last-child { border-bottom: none; }
-    /* ASR widget card highlight */
-    .sc-dash-card.asr-highlight { border: 2px solid #FF9900; }
-    .sc-dash-card.asr-highlight .sc-dash-card-header { background: linear-gradient(135deg, #131921, #1b2b3a); color: #FF9900; }
-    .sc-dash-btn.asr { background: #FF9900; color: #131921; }
-    .sc-dash-btn.asr:hover { background: #f0a500; }
-    .section-pills { display: flex; background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-    .pill { flex: 1; padding: 14px 10px; text-align: center; font-size: 13px; font-weight: 600; color: #555; cursor: pointer; border-right: 1px solid #eee; transition: background 0.15s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .pill:last-child { border-right: none; }
-    .pill:hover { background: #fef9f0; color: #C7511F; }
-    .pill.active { background: #FFF3CD; color: #C7511F; border-bottom: 3px solid #FF9900; }
-    .pill-num { width: 26px; height: 26px; border-radius: 50%; background: #FF9900; color: #131921; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-    .pill.active .pill-num { background: #C7511F; color: #fff; }
-    .section-panel { display: none; }
-    .section-panel.active { display: block; }
-    .section-title { font-size: 18px; font-weight: 700; color: #0F1111; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
-    .callout { background: #EAF7EA; border: 1px solid #a8d8b0; border-radius: 6px; padding: 14px 18px; font-size: 13px; color: #0d4a2f; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
-    .callout.blue { background: #EBF4FF; border-color: #90bef5; color: #0c3260; }
-    .callout.amber { background: #FFF8E7; border-color: #f0c060; color: #5a3a00; }
-    .callout-icon { font-size: 18px; flex-shrink: 0; }
-  </style>
-  <style>
-    .mockup-frame { background: #fff; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.09); margin-bottom: 20px; }
-    .mockup-titlebar { background: #f0f2f2; border-bottom: 1px solid #ddd; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
-    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .mockup-url { flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 3px; padding: 3px 10px; font-size: 11px; color: #555; }
-    .mockup-body { padding: 20px 24px; }
-    .sc-inner-nav { background: #232F3E; display: flex; }
-    .sc-nav-tab { color: #ccc; font-size: 12px; padding: 10px 16px; cursor: pointer; border-right: 1px solid #3a4553; }
-    .sc-nav-tab.active { color: #FF9900; border-bottom: 2px solid #FF9900; }
-    .sc-page-header { background: #fff8e7; border: 1px solid #f0c060; border-radius: 6px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
-    .sc-alert-icon { font-size: 22px; flex-shrink: 0; }
-    .sc-alert-title { font-size: 14px; font-weight: 700; color: #0F1111; margin-bottom: 4px; }
-    .sc-alert-body { font-size: 13px; color: #555; line-height: 1.5; }
-    .sc-alert-cta { display: inline-block; margin-top: 8px; background: #FF9900; color: #131921; font-size: 13px; font-weight: 700; padding: 7px 16px; border-radius: 4px; border: 1px solid #a88734; cursor: pointer; }
-    .sc-alert-cta:hover { background: #f0a500; text-decoration: none; color: #131921; }
-    .sc-widget { border: 1px solid #ddd; border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
-    .sc-widget-header { background: #f0f2f2; border-bottom: 1px solid #ddd; padding: 10px 16px; font-size: 13px; font-weight: 700; color: #0F1111; display: flex; justify-content: space-between; align-items: center; }
-    .sc-widget-body { padding: 14px 16px; }
-    .sc-row { display: flex; gap: 16px; margin-bottom: 16px; }
-    .sc-col { flex: 1; }
-    .listing-step { border: 1px solid #ddd; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
-    .listing-step-header { background: #f0f2f2; border-bottom: 1px solid #ddd; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
-    .step-circle { width: 24px; height: 24px; border-radius: 50%; background: #FF9900; color: #131921; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .step-circle.done { background: #067D62; color: #fff; }
-    .listing-step-body { padding: 14px 16px; font-size: 13px; color: #555; }
-    .asr-banner { background: linear-gradient(135deg, #131921, #1b2b3a); border-radius: 8px; padding: 20px 24px; display: flex; align-items: center; gap: 20px; margin-top: 16px; }
-    .asr-banner-icon { font-size: 36px; flex-shrink: 0; }
-    .asr-banner h3 { color: #FF9900; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-    .asr-banner p { color: #c8d0d8; font-size: 13px; line-height: 1.5; }
-    .asr-banner-btn { margin-left: auto; flex-shrink: 0; background: #FF9900; color: #131921; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 4px; border: 1px solid #a88734; cursor: pointer; white-space: nowrap; }
-    .asr-banner-btn:hover { background: #f0a500; }
-    .entry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
-    .entry-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 18px; text-align: center; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; }
-    .entry-card:hover { border-color: #FF9900; box-shadow: 0 2px 10px rgba(255,153,0,0.15); }
-    .entry-card-icon { font-size: 28px; margin-bottom: 10px; }
-    .entry-card-title { font-size: 13px; font-weight: 700; color: #0F1111; margin-bottom: 6px; }
-    .entry-card-desc { font-size: 12px; color: #777; line-height: 1.5; }
-    .entry-card-badge { display: inline-block; margin-top: 8px; background: #FFF3CD; color: #C7511F; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px; border: 1px solid #f0c060; }
-    .reg-steps { display: flex; gap: 0; margin-bottom: 20px; }
-    .reg-step { flex: 1; padding: 14px 12px; border: 1px solid #ddd; border-right: none; background: #fff; text-align: center; font-size: 12px; color: #555; position: relative; }
-    .reg-step:last-child { border-right: 1px solid #ddd; }
-    .reg-step.active { background: #FFF3CD; border-color: #FF9900; border-right: 1px solid #FF9900; z-index: 1; }
-    .reg-step.done { background: #f0faf4; }
-    .reg-step-num { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
-    .reg-step-label { font-weight: 600; color: #0F1111; font-size: 12px; }
-  </style>
-  <style>
-    .asr-hero { background: linear-gradient(to right, #131921, #1b2b3a); border-radius: 8px; padding: 32px 36px; margin-bottom: 24px; }
-    .asr-hero h1 { color: #fff; font-size: 26px; font-weight: 700; margin-bottom: 8px; }
-    .asr-hero h1 span { color: #FF9900; }
-    .asr-hero p { color: #9ba8b4; font-size: 14px; line-height: 1.6; max-width: 560px; margin-bottom: 20px; }
-    .asr-stats { display: flex; gap: 16px; flex-wrap: wrap; }
-    .asr-stat-box { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 12px 18px; text-align: center; }
-    .asr-stat-num { color: #FF9900; font-size: 22px; font-weight: 800; }
-    .asr-stat-label { color: #9ba8b4; font-size: 11px; margin-top: 2px; }
-    .pathway-toggle { display: flex; gap: 12px; margin-bottom: 24px; }
-    .pathway-btn { flex: 1; padding: 16px 18px; border: 2px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; text-align: left; transition: all 0.15s; }
-    .pathway-btn:hover { border-color: #FF9900; }
-    .pathway-btn.active { border-color: #FF9900; background: #FFF3CD; }
-    .pathway-btn-title { font-size: 14px; font-weight: 700; color: #0F1111; margin-bottom: 4px; }
-    .pathway-btn-desc { font-size: 12px; color: #666; line-height: 1.5; }
-    .pathway-btn-badge { display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px; }
-    .pathway-btn.active .pathway-btn-badge { background: #FF9900; color: #131921; }
-    .pathway-btn:not(.active) .pathway-btn-badge { background: #f3f3f3; color: #555; border: 1px solid #ddd; }
-    .pathway-panel { display: none; }
-    .pathway-panel.active { display: block; }
-    .byos-form { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 20px 24px; }
-    .form-group { margin-bottom: 14px; }
-    .form-label { font-size: 13px; font-weight: 600; color: #0F1111; margin-bottom: 4px; display: block; }
-    .form-input { width: 100%; padding: 8px 12px; border: 1px solid #aaa; border-radius: 3px; font-size: 13px; color: #555; background: #f9f9f9; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .form-select { width: 100%; padding: 8px 12px; border: 1px solid #aaa; border-radius: 3px; font-size: 13px; color: #555; background: #f9f9f9; }
-    .spn-filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
-    .spn-cat-btn { padding: 7px 14px; border: 1px solid #ddd; background: #fff; border-radius: 3px; font-size: 13px; cursor: pointer; color: #0F1111; transition: all 0.15s; }
-    .spn-cat-btn:hover { border-color: #FF9900; color: #C7511F; }
-    .spn-cat-btn.active { background: #FFF3CD; border-color: #FF9900; color: #C7511F; font-weight: 700; }
-    .spn-search { margin-left: auto; display: flex; border: 1px solid #ddd; border-radius: 3px; overflow: hidden; }
-    .spn-search input { padding: 7px 12px; border: none; font-size: 13px; outline: none; width: 220px; }
-    .spn-search button { background: #FF9900; border: none; padding: 0 12px; cursor: pointer; font-size: 14px; }
-    .spn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-    .spn-card { background: #fff; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; display: flex; flex-direction: column; }
-    .spn-card:hover { border-color: #FF9900; box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
-    .spn-card-top { padding: 16px; display: flex; gap: 14px; border-bottom: 1px solid #f0f0f0; }
-    .spn-logo { width: 52px; height: 52px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; flex-shrink: 0; }
-    .spn-card-name { font-size: 15px; font-weight: 700; color: #0F1111; margin-bottom: 2px; }
-    .spn-card-cat { font-size: 11px; color: #C7511F; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
-    .badge-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
-    .badge-asr { display: inline-flex; align-items: center; gap: 3px; background: #EAF7EA; color: #067D62; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
-    .badge-type { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 3px; }
-    .badge-type.dist { background: #E8F0FE; color: #1a56b0; }
-    .badge-type.mfr { background: #FFF3E0; color: #b45309; }
-    .spn-card-desc { padding: 12px 16px; font-size: 13px; color: #555; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
-    .spn-card-meta { padding: 10px 16px; background: #f9f9f9; border-top: 1px solid #f0f0f0; display: flex; gap: 16px; flex-wrap: wrap; }
-    .spn-meta { font-size: 12px; color: #555; }
-    .spn-meta strong { color: #0F1111; }
-    .spn-stars { color: #FF9900; font-size: 12px; }
-    .spn-card-footer { padding: 12px 16px; display: flex; gap: 8px; border-top: 1px solid #f0f0f0; }
-    .btn-primary { flex: 1; padding: 8px; background: #FF9900; color: #131921; font-weight: 700; font-size: 13px; border: 1px solid #a88734; border-radius: 4px; cursor: pointer; transition: background 0.15s; }
-    .btn-primary:hover { background: #f0a500; }
-    .btn-secondary { padding: 8px 14px; background: #fff; color: #0F1111; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
-    .btn-secondary:hover { background: #f7f7f7; border-color: #aaa; }
-    .benefits-hero { background: linear-gradient(135deg, #0a2e1a, #0d3d25); border-radius: 8px; padding: 28px 32px; margin-bottom: 24px; text-align: center; }
-    .benefits-hero h2 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-    .benefits-hero p { color: #a8d5b5; font-size: 14px; line-height: 1.6; max-width: 580px; margin: 0 auto; }
-    .benefits-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-    .compare-col { background: #fff; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
-    .compare-header { padding: 14px 18px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .compare-header.before { background: #FFF3CD; color: #C7511F; border-bottom: 1px solid #f0c060; }
-    .compare-header.after { background: #EAF7EA; color: #067D62; border-bottom: 1px solid #a8d8b0; }
-    .compare-body { padding: 16px 18px; }
-    .compare-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #444; line-height: 1.5; }
-    .compare-item:last-child { border-bottom: none; }
-    .compare-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .tenets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
-    .tenet-card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 18px; border-top: 3px solid #FF9900; }
-    .tenet-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #FF9900; margin-bottom: 6px; }
-    .tenet-title { font-size: 13px; font-weight: 700; color: #0F1111; margin-bottom: 6px; }
-    .tenet-desc { font-size: 12px; color: #666; line-height: 1.6; }
-    .value-exchange { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-    .value-col { background: #fff; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
-    .value-header { padding: 14px 18px; font-size: 14px; font-weight: 700; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
-    .value-header.supplier { background: #f0f4ff; color: #1a56b0; }
-    .value-header.seller { background: #f0faf4; color: #067D62; }
-    .value-body { padding: 16px 18px; }
-    .value-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #444; line-height: 1.5; }
-    .value-item:last-child { border-bottom: none; }
-    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
-    .metric-card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 20px 16px; text-align: center; }
-    .metric-num { font-size: 28px; font-weight: 800; color: #067D62; }
-    .metric-arrow { color: #067D62; font-size: 16px; }
-    .metric-label { font-size: 12px; color: #777; margin-top: 4px; line-height: 1.4; }
-    .metric-card.red .metric-num, .metric-card.red .metric-arrow { color: #C40000; }
-    .timeline { position: relative; padding-left: 32px; margin-bottom: 24px; }
-    .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #FF9900, #067D62); }
-    .timeline-item { position: relative; margin-bottom: 20px; }
-    .timeline-dot { position: absolute; left: -26px; top: 4px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 2px #FF9900; background: #FF9900; }
-    .timeline-dot.green { background: #067D62; box-shadow: 0 0 0 2px #067D62; }
-    .timeline-card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 14px 16px; }
-    .timeline-title { font-size: 13px; font-weight: 700; color: #0F1111; margin-bottom: 4px; }
-    .timeline-desc { font-size: 13px; color: #555; line-height: 1.5; }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
-    .modal-overlay.open { display: flex; }
-    .modal-box { background: #fff; border-radius: 6px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.3); animation: fadeUp 0.2s ease; }
-    @keyframes fadeUp { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
-    .modal-header { padding: 18px 22px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 14px; }
-    .modal-logo { width: 56px; height: 56px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #fff; flex-shrink: 0; }
-    .modal-name { font-size: 18px; font-weight: 700; }
-    .modal-sub { font-size: 12px; color: #888; margin-top: 2px; }
-    .modal-close { margin-left: auto; background: none; border: none; font-size: 20px; cursor: pointer; color: #888; }
-    .modal-body { padding: 20px 22px; }
-    .modal-section { margin-bottom: 18px; }
-    .modal-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #888; margin-bottom: 8px; }
-    .modal-desc { font-size: 14px; color: #444; line-height: 1.7; }
-    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag { background: #f3f3f3; border: 1px solid #ddd; border-radius: 3px; padding: 4px 10px; font-size: 12px; color: #444; }
-    .modal-stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-    .modal-stat { background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; padding: 12px; text-align: center; }
-    .modal-stat-num { font-size: 18px; font-weight: 800; color: #FF9900; }
-    .modal-stat-label { font-size: 11px; color: #888; margin-top: 2px; }
-    .modal-footer { padding: 14px 22px; border-top: 1px solid #eee; display: flex; gap: 10px; }
-    .ascs-block { background: linear-gradient(135deg,#131921,#1b2b3a); border-radius: 6px; padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start; }
-    .ascs-block-text { font-size: 13px; color: #c8d0d8; line-height: 1.5; }
-    .ascs-block-text strong { color: #FF9900; }
-    .reg-steps { display: flex; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; }
-    .reg-step { flex: 1; padding: 12px 10px; border-right: 1px solid #ddd; background: #fff; text-align: center; font-size: 12px; color: #666; }
-    .reg-step:last-child { border-right: none; }
-    .reg-step.done { background: #f0faf4; }
-    .reg-step.active { background: #FFF3CD; }
-    .reg-step-label { font-weight: 700; color: #0F1111; font-size: 12px; margin-top: 2px; }
-    .reg-step-status { font-size: 11px; margin-top: 2px; }
-    @media (max-width: 680px) {
-      .entry-grid, .tenets-grid, .value-exchange, .benefits-compare { grid-template-columns: 1fr; }
-      .metrics-grid { grid-template-columns: repeat(2,1fr); }
-      .pathway-toggle { flex-direction: column; }
-      .amz-nav-search { display: none; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Amazon Supplier Registry (ASR) | Seller Central</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Amazon Ember","Helvetica Neue",Arial,sans-serif;background:#f3f3f3;color:#0F1111;font-size:14px}
+
+/* ── Nav ── */
+.nav{background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 20px;height:50px;position:sticky;top:0;z-index:200;gap:12px}
+.nav-logo{font-size:20px;font-weight:900;font-style:italic;color:#131921;white-space:nowrap}
+.nav-logo span{font-style:normal;font-weight:400;font-size:13px;margin-left:2px}
+.nav-account{font-size:12px;font-weight:700;border:1px solid #ddd;padding:4px 10px;border-radius:3px;white-space:nowrap}
+.nav-domain{font-size:12px;color:#555;border:1px solid #ddd;padding:4px 10px;border-radius:3px}
+.nav-search{flex:1;max-width:240px;display:flex;border:1px solid #aaa;border-radius:3px;overflow:hidden}
+.nav-search input{flex:1;border:none;padding:5px 10px;font-size:13px;outline:none}
+.nav-search button{background:#f0f2f2;border:none;border-left:1px solid #aaa;padding:0 10px;cursor:pointer}
+.nav-utils{display:flex;gap:14px;margin-left:4px}
+.nav-utils a{font-size:12px;color:#007185;cursor:pointer}
+.tabnav{background:#fff;border-bottom:1px solid #ddd;display:flex;padding:0 20px;height:36px;overflow-x:auto;position:sticky;top:50px;z-index:199}
+.tab{font-size:13px;color:#131921;padding:0 14px;height:36px;display:flex;align-items:center;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.active{color:#C7511F;border-bottom-color:#C7511F;font-weight:600}
+.tab:hover{color:#C7511F}
+
+/* ── Journey pills ── */
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px 60px}
+.journey{display:flex;background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden;margin-bottom:28px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.jpill{flex:1;padding:16px 12px;text-align:center;cursor:pointer;border-right:1px solid #eee;transition:background .15s;display:flex;flex-direction:column;align-items:center;gap:5px}
+.jpill:last-child{border-right:none}
+.jpill:hover{background:#fef9f0}
+.jpill.active{background:#FFF3CD;border-bottom:3px solid #FF9900}
+.jpill-num{width:28px;height:28px;border-radius:50%;background:#FF9900;color:#131921;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.jpill.active .jpill-num{background:#C7511F;color:#fff}
+.jpill-label{font-size:12px;font-weight:600;color:#555}
+.jpill.active .jpill-label{color:#C7511F}
+
+/* ── Panels ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── Shared components ── */
+.page-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.page-sub{font-size:14px;color:#555;margin-bottom:28px;line-height:1.6;max-width:700px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.card{background:#fff;border:1px solid #ddd;border-radius:6px;padding:20px}
+.card-icon{font-size:28px;margin-bottom:10px}
+.card-title{font-size:14px;font-weight:700;margin-bottom:6px}
+.card-body{font-size:13px;color:#555;line-height:1.6}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;margin-top:8px}
+.tag.red{background:#FEF0EF;color:#C40000;border:1px solid #f5c6c2}
+.tag.green{background:#EAF7EA;color:#067D62;border:1px solid #a8d8b0}
+.tag.amber{background:#FFF3CD;color:#C7511F;border:1px solid #f0c060}
+.tag.blue{background:#EBF4FF;color:#1a56b0;border:1px solid #90bef5}
+.stat-big{font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+.stat-label{font-size:12px;color:#777}
+.btn{display:inline-block;padding:9px 20px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.btn-orange{background:#FF9900;color:#131921;border:1px solid #a88734}
+.btn-orange:hover{background:#f0a500}
+.btn-teal{background:#008296;color:#fff}
+.btn-teal:hover{background:#006d7e}
+.btn-outline{background:#fff;color:#131921;border:1px solid #ddd}
+.btn-outline:hover{border-color:#aaa}
+.divider{border:none;border-top:1px solid #e0e0e0;margin:24px 0}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px}
+.center{text-align:center}
+</style>
+
+<style>
+/* ── SC mockup mini ── */
+.mockup{background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.mockup-bar{background:#f0f2f2;border-bottom:1px solid #ddd;padding:7px 12px;display:flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%}
+.url{flex:1;background:#fff;border:1px solid #ccc;border-radius:2px;padding:2px 8px;font-size:10px;color:#555}
+.mockup-body{padding:16px 18px}
+.sc-nav-strip{background:#232F3E;display:flex}
+.sc-nav-tab{color:#ccc;font-size:11px;padding:7px 14px;border-right:1px solid #3a4553;cursor:pointer}
+.sc-nav-tab.a{color:#FF9900;border-bottom:2px solid #FF9900}
+.alert-box{border-radius:4px;padding:12px 14px;font-size:13px;line-height:1.5;margin-bottom:12px}
+.alert-box.warn{background:#FFF8E7;border:1px solid #f0c060}
+.alert-box.err{background:#FEF0EF;border:1px solid #f5c6c2}
+.alert-box.ok{background:#EAF7EA;border:1px solid #a8d8b0}
+.alert-title{font-weight:700;margin-bottom:4px}
+.asr-pill{display:inline-flex;align-items:center;gap:4px;background:#FFF3CD;border:2px solid #FF9900;border-radius:4px;padding:8px 14px;font-size:13px;font-weight:700;color:#C7511F;cursor:pointer;margin-top:8px}
+.asr-pill:hover{background:#ffe8a0}
+.reg-bar{display:flex;border:1px solid #ddd;border-radius:4px;overflow:hidden;margin-bottom:14px}
+.reg-step{flex:1;padding:8px 6px;text-align:center;font-size:11px;border-right:1px solid #ddd;background:#fff;color:#888}
+.reg-step:last-child{border-right:none}
+.reg-step.done{background:#f0faf4;color:#067D62}
+.reg-step.here{background:#FFF3CD;color:#C7511F;font-weight:700}
+
+/* ── Before / After ── */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #ddd;border-radius:6px;overflow:hidden;margin-bottom:20px}
+.compare-col{}
+.compare-head{padding:12px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.compare-head.before{background:#FFF3CD;color:#C7511F;border-bottom:1px solid #f0c060}
+.compare-head.after{background:#EAF7EA;color:#067D62;border-bottom:1px solid #a8d8b0;border-left:1px solid #ddd}
+.compare-body{padding:10px 16px}
+.compare-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:13px;color:#444;line-height:1.4}
+.compare-row:last-child{border-bottom:none}
+.ci{font-size:15px;flex-shrink:0;margin-top:1px}
+.compare-col.after .compare-body{border-left:1px solid #ddd}
+
+/* ── Impact numbers ── */
+.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.impact-card{background:#fff;border:1px solid #ddd;border-radius:6px;padding:24px 16px;text-align:center}
+.impact-num{font-size:42px;font-weight:700;line-height:1;margin-bottom:6px}
+.impact-label{font-size:13px;color:#555;line-height:1.4}
+
+/* ── Supplier cards (simple) ── */
+.sup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
+.sup-card{background:#fff;border:1px solid #ddd;border-radius:4px;cursor:pointer;transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column}
+.sup-card:hover{border-color:#FF9900;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.sup-card-top{padding:14px;display:flex;gap:12px;border-bottom:1px solid #f0f0f0}
+.sup-logo{width:44px;height:44px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0}
+.sup-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.sup-cat{font-size:11px;color:#C7511F;font-weight:600;text-transform:uppercase;margin-bottom:4px}
+.badge-asr{display:inline-flex;align-items:center;gap:3px;background:#EAF7EA;color:#067D62;font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px}
+.badge-dist{background:#E8F0FE;color:#1a56b0;font-size:11px;font-weight:600;padding:1px 6px;border-radius:2px}
+.badge-mfr{background:#FFF3E0;color:#b45309;font-size:11px;font-weight:600;padding:1px 6px;border-radius:2px}
+.sup-desc{padding:10px 14px;font-size:12px;color:#555;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.sup-meta{padding:8px 14px;background:#f9f9f9;border-top:1px solid #f0f0f0;font-size:11px;color:#666;display:flex;gap:12px}
+.sup-footer{padding:10px 14px;display:flex;gap:8px;border-top:1px solid #f0f0f0}
+.stars{color:#FF9900;font-size:11px}
+
+/* ── Filter row ── */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.fcat{padding:6px 12px;border:1px solid #ddd;background:#fff;border-radius:3px;font-size:12px;cursor:pointer;color:#0F1111}
+.fcat:hover{border-color:#FF9900;color:#C7511F}
+.fcat.active{background:#FFF3CD;border-color:#FF9900;color:#C7511F;font-weight:700}
+.fsearch{margin-left:auto;display:flex;border:1px solid #ddd;border-radius:3px;overflow:hidden}
+.fsearch input{padding:6px 10px;border:none;font-size:12px;outline:none;width:180px}
+.fsearch button{background:#FF9900;border:none;padding:0 10px;cursor:pointer;font-size:13px}
+
+/* ── Modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:6px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.3);animation:up .2s ease}
+@keyframes up{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.modal-head{padding:16px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px}
+.modal-logo-big{width:48px;height:48px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0}
+.modal-close{margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:#888}
+.modal-body{padding:18px 20px}
+.modal-foot{padding:12px 20px;border-top:1px solid #eee;display:flex;gap:8px}
+.msec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:6px;margin-top:14px}
+.msec-label:first-child{margin-top:0}
+.mtag-row{display:flex;flex-wrap:wrap;gap:5px}
+.mtag{background:#f3f3f3;border:1px solid #ddd;border-radius:2px;padding:3px 8px;font-size:11px;color:#444}
+.mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.mstat{background:#f9f9f9;border:1px solid #eee;border-radius:3px;padding:10px;text-align:center}
+.mstat-num{font-size:16px;font-weight:800;color:#FF9900}
+.mstat-label{font-size:10px;color:#888;margin-top:2px}
+
+@media(max-width:640px){
+  .grid2,.compare,.grid3,.grid4,.impact-grid{grid-template-columns:1fr}
+  .nav-domain,.nav-search{display:none}
+}
+</style>
+
 </head>
 <body>
 
-<!-- ── Exact SC-style top nav ── -->
-<nav class="sc-topnav">
-  <div class="sc-topnav-logo">
-    <span class="logo-amz">amazon</span>
-    <span class="logo-sc">seller central</span>
-  </div>
-  <div class="sc-topnav-account"><span class="sc-topnav-flag">🇮🇳</span> SYED TAHIR</div>
-  <div class="sc-topnav-domain">🌐 www.amazon.in ▾</div>
-  <div class="sc-topnav-lang">English ▾</div>
-  <div class="sc-topnav-search">
-    <input type="text" placeholder="Search" />
-    <button>🔍</button>
-  </div>
-  <div class="sc-topnav-utils">
-    <a>Messages</a>
-    <a>Help</a>
-    <a>Settings</a>
-  </div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">amazon<span>seller central</span></div>
+  <div class="nav-account">🇮🇳 SYED TAHIR</div>
+  <div class="nav-domain">🌐 www.amazon.in ▾</div>
+  <div class="nav-search"><input placeholder="Search" /><button>🔍</button></div>
+  <div class="nav-utils"><a>Messages</a><a>Help</a><a>Settings</a></div>
 </nav>
-
-<!-- ── SC horizontal tab nav ── -->
-<div class="sc-tabnav">
-  <div class="sc-tab">Catalog</div>
-  <div class="sc-tab active">Home</div>
-  <div class="sc-tab">Inventory</div>
-  <div class="sc-tab">Orders</div>
-  <div class="sc-tab">Advertising</div>
-  <div class="sc-tab">Stores</div>
-  <div class="sc-tab">Programs</div>
-  <div class="sc-tab">Reports</div>
-  <div class="sc-tab">Performance</div>
-  <div class="sc-tab">Apps &amp; Services</div>
-  <div class="sc-tab">Brands</div>
+<div class="tabnav">
+  <div class="tab">Catalog</div><div class="tab active">Home</div>
+  <div class="tab">Inventory</div><div class="tab">Orders</div>
+  <div class="tab">Advertising</div><div class="tab">Stores</div>
+  <div class="tab">Programs</div><div class="tab">Reports</div>
+  <div class="tab">Performance</div><div class="tab">Apps &amp; Services</div>
 </div>
 
-<!-- ── Stats bar ── -->
-<div class="sc-statsbar">
-  <div class="sc-stat">
-    <div class="sc-stat-icon">🌐</div>
-    <div>
-      <div class="sc-stat-label">Marketplaces</div>
-      <div style="display:flex; align-items:center; gap:4px;"><span class="sc-stat-val">1</span><span class="sc-stat-arrow">▾</span></div>
+<div class="wrap">
+
+  <!-- JOURNEY PILLS -->
+  <div class="journey">
+    <div class="jpill active" onclick="show('discover')">
+      <div class="jpill-num">1</div>
+      <div class="jpill-label">The Problem</div>
     </div>
-  </div>
-  <div class="sc-stat">
-    <div>
-      <div class="sc-stat-label">Open Orders</div>
-      <div style="display:flex; align-items:center; gap:4px;"><span class="sc-stat-val">0</span><span class="sc-stat-arrow">▾</span></div>
+    <div class="jpill" onclick="show('browse')">
+      <div class="jpill-num">2</div>
+      <div class="jpill-label">The Solution — ASR</div>
     </div>
-  </div>
-  <div class="sc-stat">
-    <div>
-      <div class="sc-stat-label">Buyer Messages</div>
-      <div><span class="sc-stat-val">0</span></div>
-    </div>
-  </div>
-  <div class="sc-stat" style="flex:1;">
-    <div>
-      <div class="sc-stat-label">Total Balance</div>
-      <div><span class="sc-stat-val" style="font-size:14px; color:#888;">—</span></div>
-    </div>
-  </div>
-  <div class="sc-stat" style="border-right:none;">
-    <div>
-      <div class="sc-stat-label">All Merchandising Sales</div>
-      <div><span class="sc-stat-val" style="font-size:14px; color:#888;">—</span></div>
-    </div>
-  </div>
-</div>
-
-<div class="page-wrap">
-  <!-- SC-style dashboard home (replaces old pill nav intro) -->
-  <div id="sc-home">
-    <!-- Row 1: 4 cards -->
-    <div class="sc-dashboard">
-
-      <!-- News -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">News <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-body">
-          <div class="sc-news-item">
-            <div class="sc-news-date">AUG 13, 2026</div>
-            <div class="sc-news-title">Amazon Supplier Registry (ASR) is now available — source verified inventory and bypass offer-stage gating</div>
-            <div class="sc-news-link" onclick="showSection('browse')">Read more &gt;</div>
-          </div>
-          <div class="sc-news-item">
-            <div class="sc-news-date">AUG 10, 2026</div>
-            <div class="sc-news-title">New: Bring Your Own Supplier for Amazon Assisted Verification — submit existing suppliers for ASR clearance</div>
-            <div class="sc-news-link" onclick="showSection('browse')">Read more &gt;</div>
-          </div>
-          <div class="sc-news-item">
-            <div class="sc-news-date">AUG 5, 2026</div>
-            <div class="sc-news-title">Supply chain verification now integrated into account registration — complete sourcing setup on day one</div>
-            <div class="sc-news-link" onclick="showSection('discover')">Read more &gt;</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ASR — the hero widget -->
-      <div class="sc-dash-card asr-highlight">
-        <div class="sc-dash-card-header">Amazon Supplier Registry (ASR) <span class="sc-dash-card-menu" style="color:#FF9900;">···</span></div>
-        <div class="sc-dash-card-body">
-          <div style="font-size:13px; color:#555; margin-bottom:10px; line-height:1.5;">Browse Amazon-verified Authorized Distributors and Direct Suppliers. Sellers who source via ASR have supply chain pre-verified — no invoice submission required at listing.</div>
-          <div style="display:flex; gap:16px; margin-bottom:8px;">
-            <div style="text-align:center;">
-              <div style="font-size:26px; font-weight:300; color:#131921;">500+</div>
-              <div style="font-size:11px; color:#888;">Registered Suppliers</div>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:26px; font-weight:300; color:#131921;">30+</div>
-              <div style="font-size:11px; color:#888;">Categories</div>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:26px; font-weight:300; color:#008296;">0</div>
-              <div style="font-size:11px; color:#888;">Invoice Uploads</div>
-            </div>
-          </div>
-        </div>
-        <div class="sc-dash-card-footer">
-          <button class="sc-dash-btn asr" onclick="showSection('browse')">Browse ASR Suppliers</button>
-        </div>
-      </div>
-
-      <!-- Supply Chain Verification Status -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">Supply Chain Verification <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-body">
-          <div class="sc-stat-row">
-            <div style="font-size:28px; font-weight:300; color:#C40000;">2</div>
-            <div style="font-size:13px; color:#555;">ASINs pending supply chain verification</div>
-          </div>
-          <div class="sc-stat-row">
-            <div style="font-size:28px; font-weight:300; color:#131921;">0</div>
-            <div style="font-size:13px; color:#555;">ASINs cleared via ASR suppliers</div>
-          </div>
-        </div>
-        <div class="sc-dash-card-footer">
-          <button class="sc-dash-btn" onclick="showSection('discover')">Resolve Verification</button>
-        </div>
-      </div>
-
-      <!-- Seller Poll -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">Seller Poll <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-body">
-          <div style="font-size:13px; color:#555; margin-bottom:10px;">Would you use Amazon Supplier Registry to source inventory and reduce verification friction?</div>
-          <div class="sc-stat-row"><div class="sc-radio"></div><div>Strongly Agree</div></div>
-          <div class="sc-stat-row"><div class="sc-radio"></div><div>Agree</div></div>
-          <div class="sc-stat-row"><div class="sc-radio"></div><div>Neither Agree nor Disagree</div></div>
-          <div class="sc-stat-row"><div class="sc-radio"></div><div>Disagree</div></div>
-          <div class="sc-stat-row"><div class="sc-radio"></div><div>Strongly Disagree</div></div>
-        </div>
-        <div class="sc-dash-card-footer">
-          <button class="sc-dash-btn grey">Submit</button>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Row 2: 4 cards -->
-    <div class="sc-dashboard-row2">
-
-      <!-- Account Health -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">Account Health <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-body">
-          <div style="font-size:13px; color:#555; margin-bottom:8px;">Sourcing from ASR-registered suppliers reduces authenticity complaints and account violations.</div>
-          <div class="sc-stat-row">
-            <div style="font-size:28px; font-weight:300; color:#C7511F;">312</div>
-            <div style="font-size:12px; color:#888;">Account Health Score<br><span style="color:#C7511F;">At Risk (threshold: 400)</span></div>
-          </div>
-        </div>
-        <div class="sc-dash-card-footer">
-          <button class="sc-dash-btn" onclick="showSection('discover')">View Account Health</button>
-        </div>
-      </div>
-
-      <!-- Explore ASR — ASCS -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">Explore ASCS Integration <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-fba-img" style="width:100%; height:90px; background:linear-gradient(135deg,#1a1a2e,#16213e); display:flex; align-items:center; justify-content:center; font-size:36px;">🚚</div>
-        <div class="sc-dash-card-body" style="padding:10px 12px;">
-          <div style="font-size:13px; color:#555;">ASR suppliers route through Amazon Supply Chain Services for end-to-end custody-chain visibility</div>
-        </div>
-        <div class="sc-dash-card-footer">
-          <button class="sc-dash-btn" onclick="showSection('benefits')">Learn More</button>
-        </div>
-      </div>
-
-      <!-- Reduced Burden -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">Verification Burden Reduction <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-body">
-          <div class="sc-stat-row">
-            <div style="font-size:28px; font-weight:300; color:#008296;">100M+</div>
-            <div style="font-size:12px; color:#555;">Listing approvals/yr that can bypass individual verification via ASR</div>
-          </div>
-          <div class="sc-stat-row">
-            <div style="font-size:28px; font-weight:300; color:#131921;">0</div>
-            <div style="font-size:12px; color:#555;">Invoices needed when sourcing from ASR suppliers</div>
-          </div>
-        </div>
-        <div class="sc-dash-card-footer">
-          <button class="sc-dash-btn" onclick="showSection('benefits')">See Full Impact</button>
-        </div>
-      </div>
-
-      <!-- Seller Forums -->
-      <div class="sc-dash-card">
-        <div class="sc-dash-card-header">Seller Forums <span class="sc-dash-card-menu">···</span></div>
-        <div class="sc-dash-card-body">
-          <div class="sc-forum-item">
-            <div class="sc-news-date">AUG 12, 2026</div>
-            <div class="sc-news-title">How ASR helped me clear 3 months of pending gating in one day</div>
-            <div class="sc-news-link">Read more &gt;</div>
-          </div>
-          <div class="sc-forum-item">
-            <div class="sc-news-date">AUG 9, 2026</div>
-            <div class="sc-news-title">New seller here — used ASR to go live on day one, AMA</div>
-            <div class="sc-news-link">Read more &gt;</div>
-          </div>
-        </div>
-      </div>
-
+    <div class="jpill" onclick="show('benefits')">
+      <div class="jpill-num">3</div>
+      <div class="jpill-label">The Impact</div>
     </div>
   </div>
 
-  <!-- JOURNEY PILLS (below the dashboard) -->
-  <div class="section-pills">
-    <div class="pill active" onclick="showSection('discover')">
-      <div class="pill-num">1</div>Seller Discovery
-    </div>
-    <div class="pill" onclick="showSection('browse')">
-      <div class="pill-num">2</div>Browse &amp; Connect via ASR
-    </div>
-    <div class="pill" onclick="showSection('benefits')">
-      <div class="pill-num">3</div>Reduced Burden
-    </div>
-  </div>
+  <!-- ═══════════════ PANEL 1 — THE PROBLEM ═══════════════ -->
+  <div class="panel active" id="panel-discover">
 
-  <!-- ═══════════════════════════════
-       SECTION 1 — SELLER DISCOVERY
-  ═══════════════════════════════ -->
-  <div class="section-panel active" id="section-discover">
-    <div class="section-title">Where Sellers Discover Amazon Supplier Registry (ASR)</div>
-    <div class="callout blue">
-      <span class="callout-icon">💡</span>
-      <div>ASR surfaces at <strong>two distinct moments</strong> — during the new seller registration journey (before they ever list a product), and for established sellers already on Seller Central (at listing creation and during enforcement). Both moments are high-friction today; ASR removes that friction at exactly the right time.</div>
-    </div>
+    <div class="page-title">The Problem — Supply chain friction blocks sellers at every stage</div>
+    <div class="page-sub">Two types of sellers. Same root cause: no reliable way to verify suppliers, forcing Amazon to gate at the listing level instead of the supplier level.</div>
 
-    <!-- SCENARIO TOGGLE -->
-    <div class="pathway-toggle" style="margin-bottom:28px;">
-      <div class="pathway-btn active" onclick="setDiscoverScenario('new', this)">
-        <div class="pathway-btn-title">🆕 New Seller — During Registration</div>
-        <div class="pathway-btn-desc">A first-time seller registering on Amazon encounters ASR at Step 4 of the registration flow — before they've listed a single product. This is the cold-start unlock.</div>
-        <span class="pathway-btn-badge">Primary Entry Point</span>
-      </div>
-      <div class="pathway-btn" onclick="setDiscoverScenario('existing', this)">
-        <div class="pathway-btn-title">🏪 Established Seller — Inside Seller Central</div>
-        <div class="pathway-btn-desc">An existing seller encounters ASR during offer creation (supply chain step) or through an enforcement/account health action — exactly when they need a verified supplier most.</div>
-        <span class="pathway-btn-badge">Ongoing Entry Points</span>
-      </div>
-    </div>
+    <!-- Two seller scenarios -->
+    <div class="grid2" style="margin-bottom:28px;">
 
-    <!-- ── SCENARIO A: NEW SELLER REGISTRATION ── -->
-    <div class="pathway-panel active" id="discover-new">
-
-      <div class="section-title" style="font-size:15px;">📋 New Seller Registration — Step by Step</div>
-      <div class="callout amber">
-        <span class="callout-icon">⚡</span>
-        <div>The registration process has <strong>5 steps</strong>. ASR surfaces at <strong>Step 4 — Seller Interview</strong>, where sellers are asked how they source products. This is the earliest possible moment to introduce verified sourcing — before the seller has committed to any supplier.</div>
-      </div>
-
-      <!-- Step progress bar -->
-      <div class="reg-steps" style="margin-bottom:20px;">
-        <div class="reg-step done"><div>✅</div><div class="reg-step-label">Step 1</div><div class="reg-step-status" style="color:#067D62;">Create Account</div></div>
-        <div class="reg-step done"><div>✅</div><div class="reg-step-label">Step 2</div><div class="reg-step-status" style="color:#067D62;">Seller Info</div></div>
-        <div class="reg-step done"><div>✅</div><div class="reg-step-label">Step 3</div><div class="reg-step-status" style="color:#067D62;">Tax Details</div></div>
-        <div class="reg-step active"><div>👉</div><div class="reg-step-label">Step 4</div><div class="reg-step-status" style="color:#C7511F;">Seller Interview</div></div>
-        <div class="reg-step"><div>⬜</div><div class="reg-step-label">Step 5</div><div class="reg-step-status" style="color:#888;">Go Live</div></div>
-      </div>
-
-      <!-- Step 1 mockup -->
-      <div class="mockup-frame">
-        <div class="mockup-titlebar">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url">sellercentral.amazon.in › registration › create-account</div>
+      <!-- New seller -->
+      <div class="mockup">
+        <div class="mockup-bar">
+          <div class="dot" style="background:#ff5f56"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#27c93f"></div>
+          <div class="url">registration › seller-interview</div>
         </div>
-        <div class="mockup-body" style="background:#f8f9fa;">
-          <div style="max-width:420px; margin:0 auto; background:#fff; border:1px solid #ddd; border-radius:4px; padding:28px 32px;">
-            <div style="text-align:center; margin-bottom:20px;">
-              <div style="font-size:20px; font-weight:900; font-style:italic; color:#131921;">amazon <span style="font-size:13px; font-weight:400; font-style:normal;">seller central</span></div>
-            </div>
-            <div style="font-size:18px; font-weight:400; margin-bottom:18px; color:#0F1111;">Create account</div>
-            <div class="form-group"><label class="form-label">Your name</label><input class="form-input" value="Syed Tahir" readonly /></div>
-            <div class="form-group"><label class="form-label">Mobile number</label><input class="form-input" value="+91 98765 43210" readonly /></div>
-            <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="syed@business.com" readonly /></div>
-            <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" value="••••••••" readonly /></div>
-            <button class="btn-primary" style="width:100%; padding:10px; font-size:14px; border-radius:3px;">Continue</button>
-            <div style="font-size:12px; color:#555; margin-top:12px; text-align:center;">Already have an account? <span style="color:#007185;">Sign in</span></div>
-          </div>
-          <div style="text-align:center; margin-top:10px; font-size:12px; color:#888;">Step 1 of 5 — Create your Amazon account</div>
-        </div>
-      </div>
-
-      <!-- Step 2 mockup -->
-      <div class="mockup-frame">
-        <div class="mockup-titlebar">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url">sellercentral.amazon.in › registration › seller-information</div>
+        <div class="sc-nav-strip">
+          <div class="sc-nav-tab a">Registration — Step 4 of 5</div>
         </div>
         <div class="mockup-body">
-          <div style="font-size:16px; font-weight:600; margin-bottom:4px;">Register and Start Selling</div>
-          <div style="font-size:13px; color:#555; margin-bottom:16px;">Tell us about your business</div>
-          <div class="form-row">
-            <div class="form-group"><label class="form-label">Business / Company Name *</label><input class="form-input" value="Tahir Enterprises" readonly /></div>
-            <div class="form-group"><label class="form-label">Store Display Name *</label><input class="form-input" value="TahirShop" readonly /></div>
+          <div class="reg-bar">
+            <div class="reg-step done">✓ Account</div>
+            <div class="reg-step done">✓ Biz Info</div>
+            <div class="reg-step done">✓ Tax</div>
+            <div class="reg-step here">⚠ Sourcing</div>
+            <div class="reg-step">○ Go Live</div>
           </div>
-          <div class="form-row">
-            <div class="form-group"><label class="form-label">Primary Product Category</label><select class="form-select"><option>Electronics</option></select></div>
-            <div class="form-group"><label class="form-label">Business Address</label><input class="form-input" value="Mumbai, Maharashtra" readonly /></div>
+          <div class="alert-box warn">
+            <div class="alert-title">⚠️ Where do you source your products from?</div>
+            <div style="font-size:12px;color:#555;margin-top:4px;">New sellers have no verified supplier. They can't confirm their supply chain — so they can't list products. Many drop off here.</div>
           </div>
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:13px; color:#555;"><input type="checkbox" checked readonly /> I agree to the Amazon Services Business Solutions Agreement</div>
-          <button class="btn-primary" style="padding:9px 24px; font-size:13px; border-radius:3px;">Continue</button>
-          <div style="margin-top:10px; font-size:12px; color:#888;">Step 2 of 5 — Submit Seller Information</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <span style="font-size:12px;color:#888;">New seller cold-start problem</span>
+            <span class="tag red">High dropout</span>
+          </div>
         </div>
       </div>
 
-      <!-- Step 3 mockup -->
-      <div class="mockup-frame">
-        <div class="mockup-titlebar">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url">sellercentral.amazon.in › registration › tax-details</div>
+      <!-- Established seller -->
+      <div class="mockup">
+        <div class="mockup-bar">
+          <div class="dot" style="background:#ff5f56"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#27c93f"></div>
+          <div class="url">performance › account-health</div>
+        </div>
+        <div class="sc-nav-strip">
+          <div class="sc-nav-tab a">Account Health</div>
         </div>
         <div class="mockup-body">
-          <div style="font-size:16px; font-weight:600; margin-bottom:4px;">Tax Details</div>
-          <div style="font-size:13px; color:#555; margin-bottom:16px;">Required to list and sell products on Amazon.in</div>
-          <div class="form-row">
-            <div class="form-group"><label class="form-label">GSTIN *</label><input class="form-input" value="27AABCT1332L1ZN" readonly /></div>
-            <div class="form-group"><label class="form-label">PAN Number *</label><input class="form-input" value="AABCT1332L" readonly /></div>
-          </div>
-          <div style="font-size:12px; color:#555; margin-bottom:14px; line-height:1.5; padding:10px; background:#f0f4ff; border-radius:4px; border:1px solid #c0d4f5;">ℹ️ GST is mandatory for e-commerce selling. Your bank account, PAN, and GST details must belong to the same person or entity.</div>
-          <button class="btn-primary" style="padding:9px 24px; font-size:13px; border-radius:3px;">Continue</button>
-          <div style="margin-top:10px; font-size:12px; color:#888;">Step 3 of 5 — Submit Tax Details</div>
-        </div>
-      </div>
-
-      <!-- Step 4 mockup — ASR SURFACES HERE -->
-      <div class="mockup-frame" style="border:2px solid #FF9900;">
-        <div class="mockup-titlebar" style="background:#FFF8E7;">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url" style="border-color:#FF9900; color:#C7511F; font-weight:600;">sellercentral.amazon.in › registration › seller-interview ★ ASR surfaces here</div>
-        </div>
-        <div class="mockup-body">
-          <div style="font-size:16px; font-weight:600; margin-bottom:4px;">Seller Interview</div>
-          <div style="font-size:13px; color:#555; margin-bottom:16px;">Help us understand your business so we can personalise your selling experience</div>
-
-          <div class="form-group">
-            <label class="form-label">Which categories do you wish to sell in? *</label>
-            <select class="form-select"><option>Electronics, Mobile Accessories</option></select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" style="color:#C7511F; font-weight:700;">Where do you get your products from? * <span style="background:#FFF3CD; padding:2px 6px; border-radius:3px; font-size:11px; border:1px solid #f0c060;">ASR Entry Point</span></label>
-            <div style="border:2px solid #FF9900; border-radius:4px; overflow:hidden;">
-              <div style="padding:12px 14px; background:#FFF8E7; border-bottom:1px solid #f0c060; font-size:13px; font-weight:600; color:#C7511F; display:flex; align-items:center; gap:8px;">
-                🏭 Source from Amazon Supplier Registry (ASR) — Recommended
-                <span style="margin-left:auto; background:#FF9900; color:#131921; font-size:11px; font-weight:700; padding:2px 8px; border-radius:3px;">New</span>
-              </div>
-              <div style="padding:12px 14px; background:#fff; font-size:13px; color:#555; line-height:1.6;">
-                Browse Amazon-verified Authorized Distributors and Direct Suppliers. Sellers who source from ASR-registered suppliers can complete supply chain verification during registration — no additional documentation required to list products.
-                <div style="margin-top:10px;">
-                  <button class="btn-primary" style="padding:8px 18px; font-size:13px; border-radius:3px; flex:none;" onclick="showSection('browse')">Browse ASR Suppliers</button>
-                  <span style="font-size:12px; color:#888; margin-left:12px;">or choose below ↓</span>
-                </div>
-              </div>
+          <div style="display:flex;gap:12px;margin-bottom:10px;">
+            <div class="card" style="flex:1;padding:12px;text-align:center;">
+              <div style="font-size:28px;font-weight:300;color:#C7511F;">312</div>
+              <div style="font-size:11px;color:#888;">Health Score<br><span style="color:#C7511F;">At Risk</span></div>
+            </div>
+            <div class="card" style="flex:1;padding:12px;text-align:center;">
+              <div style="font-size:28px;font-weight:300;color:#C40000;">1</div>
+              <div style="font-size:11px;color:#888;">Open Violation<br><span style="color:#C40000;">Action needed</span></div>
             </div>
           </div>
-
-          <div class="form-group" style="margin-top:4px;">
-            <div style="border:1px solid #ddd; border-radius:4px; overflow:hidden;">
-              <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13px; color:#555; cursor:pointer; border-bottom:1px solid #f0f0f0;"><input type="radio" name="source" /> I manufacture / produce my own products</label>
-              <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13px; color:#555; cursor:pointer; border-bottom:1px solid #f0f0f0;"><input type="radio" name="source" /> I buy from a wholesaler or distributor</label>
-              <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13px; color:#555; cursor:pointer;"><input type="radio" name="source" /> Other</label>
-            </div>
+          <div class="alert-box err">
+            <div class="alert-title" style="color:#C40000;">Authenticity complaint — ASIN: B09XZ12345</div>
+            <div style="font-size:12px;color:#555;margin-top:3px;">Seller unknowingly sourced from a bad supplier. Now facing enforcement — through no fault of their own.</div>
           </div>
-
-          <div class="form-row" style="margin-top:14px;">
-            <div class="form-group"><label class="form-label">What is your annual turnover?</label><select class="form-select"><option>Below ₹40 Lakh</option></select></div>
-            <div class="form-group"><label class="form-label">How many products do you sell?</label><select class="form-select"><option>1–10 Products</option></select></div>
-          </div>
-
-          <button class="btn-primary" style="padding:9px 24px; font-size:13px; border-radius:3px; margin-top:4px;">Continue</button>
-          <div style="margin-top:10px; font-size:12px; color:#888;">Step 4 of 5 — Seller Interview</div>
-        </div>
-      </div>
-
-      <!-- Step 5 mockup -->
-      <div class="mockup-frame">
-        <div class="mockup-titlebar">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url">sellercentral.amazon.in › registration › complete</div>
-        </div>
-        <div class="sc-inner-nav">
-          <div class="sc-nav-tab active">Add Products</div>
-          <div class="sc-nav-tab">Performance Notifications</div>
-          <div class="sc-nav-tab">Add Products via Upload</div>
-        </div>
-        <div class="mockup-body">
-          <div style="display:flex; gap:32px; align-items:flex-start;">
-            <div style="font-size:60px; flex-shrink:0;">📦</div>
-            <div style="flex:1;">
-              <div style="font-size:24px; font-weight:300; color:#0F1111; margin-bottom:4px;">List Your Products <span style="font-size:13px; color:#007185; font-weight:400;">Learn more</span></div>
-              <div style="font-size:14px; color:#555; margin-bottom:20px;">Select an option to get started.</div>
-              <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
-                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">🔍<br/>Search</div>
-                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">📷<br/>Product Image</div>
-                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">|||<br/>Product IDs</div>
-                <div style="text-align:center; padding:12px 14px; border:2px solid #008296; border-radius:4px; cursor:pointer; font-size:12px; color:#008296; position:relative; background:#f0fafb;"><span style="position:absolute; top:-8px; right:-4px; background:#008296; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px;">New</span>📊<br/>Spreadsheet</div>
-              </div>
-              <div style="background:#EAF7EA; border:1px solid #a8d8b0; border-radius:4px; padding:12px 14px; font-size:13px; color:#0d4a2f; margin-bottom:12px;">
-                ✅ <strong>Supply chain pre-verified via ASR.</strong> Products sourced from your registered ASR supplier will not require invoice submission at listing — you can list and go live immediately.
-              </div>
-              <button style="background:#008296; color:#fff; font-weight:700; font-size:13px; padding:9px 20px; border:none; border-radius:3px; cursor:pointer;">Launch Your Business</button>
-            </div>
-          </div>
-          <div style="margin-top:12px; font-size:12px; color:#888;">Step 5 of 5 — You're ready to sell on Amazon.in</div>
-        </div>
-      </div>
-
-    </div><!-- /discover-new -->
-
-    <!-- ── SCENARIO B: ESTABLISHED SELLER ── -->
-    <div class="pathway-panel" id="discover-existing">
-
-      <div class="section-title" style="font-size:15px;">🏪 Established Seller — Two Entry Points Inside Seller Central</div>
-      <div class="callout amber">
-        <span class="callout-icon">⚡</span>
-        <div>For sellers already on Seller Central, ASR surfaces at <strong>two high-friction moments</strong>: during offer creation when supply chain verification is triggered, and on the Account Health page when an enforcement action is open.</div>
-      </div>
-
-      <!-- Entry Point 1: Offer creation / List Your Products -->
-      <div style="font-size:14px; font-weight:700; color:#0F1111; margin-bottom:10px; padding:8px 0; border-bottom:1px solid #eee;">Entry Point 1 — Listing Creation (Catalog → Add Products)</div>
-      <div class="mockup-frame">
-        <div class="mockup-titlebar">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url">sellercentral.amazon.in › catalog › add-products</div>
-        </div>
-        <div class="sc-inner-nav">
-          <div class="sc-nav-tab active">Add Products</div>
-          <div class="sc-nav-tab">Performance Notifications</div>
-          <div class="sc-nav-tab">Add Products via Upload</div>
-        </div>
-        <div class="mockup-body">
-          <div style="display:flex; gap:32px; align-items:flex-start;">
-            <div style="font-size:60px; flex-shrink:0;">📦</div>
-            <div style="flex:1;">
-              <div style="font-size:24px; font-weight:300; color:#0F1111; margin-bottom:4px;">List Your Products <span style="font-size:13px; color:#007185; font-weight:400;">Learn more</span></div>
-              <div style="font-size:14px; color:#555; margin-bottom:20px;">Select an option to get started.</div>
-              <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
-                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">🔍<br/>Search</div>
-                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">📷<br/>Product Image</div>
-                <div style="text-align:center; padding:12px 14px; border:1px solid #ddd; border-radius:4px; cursor:pointer; font-size:12px; color:#008296;">|||<br/>Product IDs</div>
-                <div style="text-align:center; padding:12px 14px; border:2px solid #008296; border-radius:4px; cursor:pointer; font-size:12px; color:#008296; position:relative; background:#f0fafb;"><span style="position:absolute; top:-8px; right:-4px; background:#008296; color:#fff; font-size:9px; padding:1px 5px; border-radius:3px;">New</span>📊<br/>Spreadsheet</div>
-              </div>
-              <div style="background:#FFF8E7; border:1px solid #f0c060; border-radius:4px; padding:14px; margin-bottom:12px;">
-                <div style="font-size:13px; font-weight:700; color:#C7511F; margin-bottom:6px;">⚠️ Supply Chain Verification Required</div>
-                <div style="font-size:13px; color:#555; margin-bottom:10px; line-height:1.5;">This product requires supply chain verification before it can go live. Upload invoices from your current supplier, or if you source from an ASR-registered supplier, verification is satisfied at the supplier level.</div>
-                <div class="asr-banner" style="margin-top:0;">
-                  <div class="asr-banner-icon" style="font-size:26px;">🏭</div>
-                  <div>
-                    <h3 style="font-size:13px;">Amazon Supplier Registry (ASR)</h3>
-                    <p style="font-size:12px;">Browse verified Authorized Distributors and Direct Suppliers. Sourcing from an ASR supplier satisfies this verification without additional documentation.</p>
-                  </div>
-                  <button class="asr-banner-btn" style="font-size:12px; padding:7px 14px;" onclick="showSection('browse')">Browse ASR Suppliers</button>
-                </div>
-              </div>
-            </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:#888;">Good seller, bad supply chain</span>
+            <span class="tag red">Victim of upstream risk</span>
           </div>
         </div>
       </div>
 
-      <!-- Entry Point 2: Account Health enforcement -->
-      <div style="font-size:14px; font-weight:700; color:#0F1111; margin:20px 0 10px; padding:8px 0; border-bottom:1px solid #eee;">Entry Point 2 — Account Health (Performance → Account Health)</div>
-      <div class="mockup-frame">
-        <div class="mockup-titlebar">
-          <div class="mockup-dot" style="background:#ff5f56"></div>
-          <div class="mockup-dot" style="background:#ffbd2e"></div>
-          <div class="mockup-dot" style="background:#27c93f"></div>
-          <div class="mockup-url">sellercentral.amazon.in › performance › account-health</div>
-        </div>
-        <div class="mockup-body">
-          <div style="font-size:16px; font-weight:700; margin-bottom:16px;">Account Health</div>
-          <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
-            <div class="sc-widget" style="flex:1; min-width:160px;">
-              <div class="sc-widget-header">Account Health Rating</div>
-              <div class="sc-widget-body" style="display:flex; align-items:center; gap:12px;">
-                <div style="font-size:40px; font-weight:300; color:#C7511F;">312</div>
-                <div style="font-size:12px; color:#C7511F;">At Risk<br/><span style="color:#888;">Threshold: 400</span></div>
-              </div>
-            </div>
-            <div class="sc-widget" style="flex:1; min-width:160px;">
-              <div class="sc-widget-header">Policy Violations</div>
-              <div class="sc-widget-body">
-                <div style="font-size:28px; font-weight:300; color:#C40000;">1</div>
-                <div style="font-size:12px; color:#555; margin-top:2px;">Open — action required</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sc-page-header" style="background:#FEF0EF; border-color:#f5c6c2;">
-            <div class="sc-alert-icon">⚠️</div>
-            <div style="flex:1;">
-              <div class="sc-alert-title" style="color:#C40000;">Authenticity Complaint — Action Required within 7 days</div>
-              <div class="sc-alert-body">Product: <strong>Wireless Bluetooth Earphones (ASIN: B09XZ12345)</strong>. We received a complaint about the authenticity of this item. This may result from sourcing through an unverified supply chain. Provide valid supply chain documentation, or switch to a verified ASR supplier to resolve this and prevent future occurrences.</div>
-              <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-                <span class="sc-alert-cta" style="cursor:pointer; background:#008296; border-color:#005f6b;" onclick="showSection('browse')">🏭 Browse ASR Suppliers</span>
-                <span class="sc-alert-cta" style="background:#fff; color:#131921; border:1px solid #aaa; cursor:pointer;">Upload Invoice</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="sc-widget">
-            <div class="sc-widget-header" style="background:#f0faf4; color:#067D62;">💡 Prevent future enforcement actions</div>
-            <div class="sc-widget-body" style="font-size:13px; color:#555; line-height:1.6;">
-              Sellers sourcing from ASR-registered suppliers have their supply chain continuously monitored by Amazon. This reduces the risk of authenticity complaints from supplier-side deviations — protecting your account health proactively, not reactively.
-              <div style="margin-top:10px;"><button class="btn-primary" style="padding:8px 18px; font-size:13px; border-radius:3px; flex:none;" onclick="showSection('browse')">View ASR Suppliers</button></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div><!-- /discover-existing -->
-
-    <div style="text-align:center; margin-top:24px;">
-      <button class="btn-primary" style="max-width:300px; padding:12px; font-size:14px;" onclick="showSection('browse')">Next: Browse ASR Suppliers →</button>
     </div>
+
+    <!-- The scale -->
+    <div class="card" style="padding:24px;margin-bottom:28px;border-left:4px solid #C40000;">
+      <div class="section-label">Why this matters at scale</div>
+      <div class="grid3" style="margin-bottom:0;">
+        <div class="center">
+          <div class="stat-big" style="color:#C40000;">100M+</div>
+          <div class="stat-label">Listing approvals per year — each one can trigger an individual supply chain verification today</div>
+        </div>
+        <div class="center">
+          <div class="stat-big" style="color:#C40000;">Weeks</div>
+          <div class="stat-label">Time new sellers spend navigating sourcing decisions with no reliable way to identify verified suppliers</div>
+        </div>
+        <div class="center">
+          <div class="stat-big" style="color:#C40000;">High</div>
+          <div class="stat-label">New seller dropout caused by supply chain friction and enforcement fear before the first sale</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center">
+      <button class="btn btn-orange" onclick="show('browse')">See the Solution →</button>
+    </div>
+
   </div>
-        <div class="mockup-dot" style="background:#ffbd2e"></div>
-        <div class="mockup-dot" style="background:#27c93f"></div>
-        <div class="mockup-url">sellercentral.amazon.in › registration › complete-registration</div>
+
+  <!-- ═══════════════ PANEL 2 — THE SOLUTION ═══════════════ -->
+  <div class="panel" id="panel-browse">
+
+    <div class="page-title">Amazon Supplier Registry (ASR)</div>
+    <div class="page-sub">A supplier discovery and verification platform built into Seller Central. Amazon verifies the supplier — so sellers don't have to. Sourcing from an ASR supplier clears supply chain verification automatically, at every listing.</div>
+
+    <!-- How it works — 3 steps -->
+    <div class="section-label">How it works</div>
+    <div class="grid3" style="margin-bottom:28px;">
+      <div class="card" style="border-top:3px solid #FF9900;">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">1. Seller discovers ASR</div>
+        <div class="card-body">Surfaces at registration (Step 4 — sourcing question) or inside Seller Central during listing creation or an enforcement action.</div>
       </div>
-      <div class="mockup-body">
-        <div style="font-size:16px; font-weight:700; margin-bottom:6px;">Complete your seller account setup</div>
-        <div style="font-size:13px; color:#555; margin-bottom:16px;">You're almost ready to start selling. Complete the steps below to activate your account.</div>
-        <div class="reg-steps">
-          <div class="reg-step done"><div>✅</div><div class="reg-step-label">Business Info</div><div class="reg-step-status" style="color:#067D62;">Complete</div></div>
-          <div class="reg-step done"><div>✅</div><div class="reg-step-label">Tax Details</div><div class="reg-step-status" style="color:#067D62;">Complete</div></div>
-          <div class="reg-step done"><div>✅</div><div class="reg-step-label">Bank Account</div><div class="reg-step-status" style="color:#067D62;">Complete</div></div>
-          <div class="reg-step active"><div>⚠️</div><div class="reg-step-label">Supply Chain</div><div class="reg-step-status" style="color:#C7511F;">Action needed</div></div>
-          <div class="reg-step"><div>⬜</div><div class="reg-step-label">Go Live</div><div class="reg-step-status" style="color:#888;">Pending</div></div>
-        </div>
-        <div class="sc-page-header">
-          <div class="sc-alert-icon">📦</div>
-          <div>
-            <div class="sc-alert-title">Confirm your inventory supply chain to complete registration</div>
-            <div class="sc-alert-body">Before you can list products, Amazon requires confirmation of your supply chain. You can upload invoices from your existing supplier, or connect with an ASR-registered supplier to skip this step entirely and go live immediately after registration.</div>
-            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <span class="sc-alert-cta" style="cursor:pointer;" onclick="showSection('browse')">🏭 Browse ASR Suppliers</span>
-              <span class="sc-alert-cta" style="background:#fff; color:#131921; border:1px solid #a88734; cursor:pointer;">Upload My Own Invoice</span>
-            </div>
-          </div>
-        </div>
-        <div class="asr-banner">
-          <div class="asr-banner-icon">⚡</div>
-          <div>
-            <h3>Amazon Supplier Registry (ASR) — one way to satisfy supply chain requirements</h3>
-            <p>Sellers who source from an ASR-registered supplier have their supply chain pre-verified at the supplier level, which can satisfy this requirement without additional documentation.</p>
-          </div>
-          <button class="asr-banner-btn" onclick="showSection('browse')">Browse ASR Suppliers →</button>
-        </div>
+      <div class="card" style="border-top:3px solid #FF9900;">
+        <div class="card-icon">🏭</div>
+        <div class="card-title">2. Seller picks a verified supplier</div>
+        <div class="card-body">Browse Authorized Distributors and Direct Suppliers — pre-verified by Amazon. Filter by category, type, location. Connect with one click.</div>
+      </div>
+      <div class="card" style="border-top:3px solid #067D62;">
+        <div class="card-icon">✅</div>
+        <div class="card-title">3. Supply chain is pre-cleared</div>
+        <div class="card-body">No invoice upload. No gating review wait. The ASIN goes live immediately. The same pre-clearance applies to every future listing from that supplier.</div>
       </div>
     </div>
 
-    <!-- Entry Point B: Offer Creation -->
-    <div class="mockup-frame">
-      <div class="mockup-titlebar">
-        <div class="mockup-dot" style="background:#ff5f56"></div>
-        <div class="mockup-dot" style="background:#ffbd2e"></div>
-        <div class="mockup-dot" style="background:#27c93f"></div>
-        <div class="mockup-url">sellercentral.amazon.in › catalog › add-products</div>
-      </div>
-      <div class="sc-inner-nav">
-        <div class="sc-nav-tab active">Add a Product</div>
-        <div class="sc-nav-tab">Draft Listings</div>
-        <div class="sc-nav-tab">Listing Quality</div>
-      </div>
-      <div class="mockup-body">
-        <div style="font-size:16px; font-weight:700; margin-bottom:16px;">Create a new listing</div>
-        <div class="listing-step">
-          <div class="listing-step-header">
-            <div class="step-circle done">✓</div>
-            <span style="font-weight:600; font-size:13px;">Product Identity &amp; Category</span>
-            <span style="margin-left:auto; font-size:12px; color:#067D62;">Complete</span>
+    <!-- Two entry points — simple mockups -->
+    <div class="section-label">Where sellers find ASR — two discovery moments</div>
+    <div class="grid2" style="margin-bottom:28px;">
+
+      <!-- Entry 1: Registration -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#0F1111;margin-bottom:8px;">🆕 New Seller — Step 4 of Registration</div>
+        <div class="mockup">
+          <div class="mockup-bar">
+            <div class="dot" style="background:#ff5f56"></div>
+            <div class="dot" style="background:#ffbd2e"></div>
+            <div class="dot" style="background:#27c93f"></div>
+            <div class="url">registration › seller-interview</div>
           </div>
-        </div>
-        <div class="listing-step">
-          <div class="listing-step-header">
-            <div class="step-circle done">✓</div>
-            <span style="font-weight:600; font-size:13px;">Offer Details &amp; Pricing</span>
-            <span style="margin-left:auto; font-size:12px; color:#067D62;">Complete</span>
-          </div>
-        </div>
-        <div class="listing-step">
-          <div class="listing-step-header">
-            <div class="step-circle" style="background:#232F3E; color:#fff;">3</div>
-            <span style="font-weight:600; font-size:13px;">Supply Chain Verification</span>
-            <span style="margin-left:auto; font-size:12px; color:#C7511F;">Action Required</span>
-          </div>
-          <div class="listing-step-body">
-            <div style="margin-bottom:12px; color:#0F1111;">This ASIN requires supply chain verification before it can go live. You can upload invoices from your existing supplier, or if you source from an ASR-registered supplier, supply chain verification is satisfied at the supplier level.</div>
-            <div class="asr-banner">
-              <div class="asr-banner-icon">🏭</div>
-              <div>
-                <h3>Amazon Supplier Registry (ASR)</h3>
-                <p>Browse Amazon-verified Authorized Distributors and Direct Suppliers. Sellers who source from ASR-registered suppliers have supply chain pre-verified — no additional invoice submission required for those listings.</p>
+          <div class="mockup-body">
+            <div class="reg-bar">
+              <div class="reg-step done">✓ Account</div>
+              <div class="reg-step done">✓ Biz Info</div>
+              <div class="reg-step done">✓ Tax</div>
+              <div class="reg-step here">⚑ Sourcing</div>
+              <div class="reg-step">○ Go Live</div>
+            </div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#0F1111;">Where do you get your products from?</div>
+            <div style="border:2px solid #FF9900;border-radius:4px;overflow:hidden;margin-bottom:8px;">
+              <div style="background:#FFF8E7;padding:10px 12px;font-size:12px;font-weight:700;color:#C7511F;display:flex;align-items:center;justify-content:space-between;">
+                🏭 Browse Amazon Supplier Registry (ASR)
+                <span style="background:#FF9900;color:#131921;font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;">New</span>
               </div>
-              <button class="asr-banner-btn" onclick="showSection('browse')">View ASR Suppliers</button>
+              <div style="padding:8px 12px;font-size:12px;color:#555;">Amazon-verified suppliers. Supply chain cleared at listing — no extra docs needed.</div>
+            </div>
+            <div style="border:1px solid #ddd;border-radius:4px;padding:8px 12px;font-size:12px;color:#888;">○ I manufacture my own products &nbsp;&nbsp; ○ I buy from a wholesaler &nbsp;&nbsp; ○ Other</div>
+          </div>
+        </div>
+        <div class="tag green" style="margin-top:8px;">New sellers go live on day 1</div>
+      </div>
+
+      <!-- Entry 2: Established seller -->
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#0F1111;margin-bottom:8px;">🏪 Existing Seller — Listing Creation or Enforcement</div>
+        <div class="mockup">
+          <div class="mockup-bar">
+            <div class="dot" style="background:#ff5f56"></div>
+            <div class="dot" style="background:#ffbd2e"></div>
+            <div class="dot" style="background:#27c93f"></div>
+            <div class="url">catalog › add-products</div>
+          </div>
+          <div class="sc-nav-strip">
+            <div class="sc-nav-tab a">Add Products</div>
+            <div class="sc-nav-tab">Performance Notifications</div>
+          </div>
+          <div class="mockup-body">
+            <div style="font-size:18px;font-weight:300;margin-bottom:12px;">List Your Products</div>
+            <div class="alert-box warn" style="margin-bottom:10px;">
+              <div class="alert-title">⚠️ Supply chain verification required before this listing goes live</div>
+              <div style="font-size:12px;color:#555;margin-top:3px;">Upload invoices from your supplier — or source from an ASR supplier to satisfy this automatically.</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#131921,#1b2b3a);border-radius:4px;padding:12px;display:flex;align-items:center;gap:10px;">
+              <div style="font-size:22px;">🏭</div>
+              <div style="flex:1;">
+                <div style="color:#FF9900;font-size:12px;font-weight:700;margin-bottom:2px;">Amazon Supplier Registry (ASR)</div>
+                <div style="color:#9ba8b4;font-size:11px;">Browse verified suppliers — verification satisfied automatically</div>
+              </div>
+              <button class="btn btn-orange" style="padding:6px 12px;font-size:11px;flex-shrink:0;" onclick="show('browse')">Browse</button>
             </div>
           </div>
         </div>
+        <div class="tag green" style="margin-top:8px;">Existing sellers skip the invoice queue</div>
       </div>
+
     </div>
 
-    <!-- Entry Point C: Enforcement / Account Health -->
-    <div class="mockup-frame">
-      <div class="mockup-titlebar">
-        <div class="mockup-dot" style="background:#ff5f56"></div>
-        <div class="mockup-dot" style="background:#ffbd2e"></div>
-        <div class="mockup-dot" style="background:#27c93f"></div>
-        <div class="mockup-url">sellercentral.amazon.in › performance › account-health</div>
-      </div>
-      <div class="mockup-body">
-        <div style="font-size:16px; font-weight:700; margin-bottom:16px;">Account Health</div>
-        <div class="sc-page-header" style="background:#FEF0EF; border-color:#f5c6c2;">
-          <div class="sc-alert-icon">⚠️</div>
-          <div>
-            <div class="sc-alert-title" style="color:#C40000;">Policy Warning — Authenticity Complaint Received</div>
-            <div class="sc-alert-body">We received a complaint regarding: <strong>Wireless Bluetooth Earphones (ASIN: B09XZ12345)</strong>. This may be the result of sourcing from an unverified supplier. Provide valid supply chain documentation within 7 days, or switch to an ASR-registered supplier to resolve this and prevent future recurrences.</div>
-            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-              <span class="sc-alert-cta" style="cursor:pointer;" onclick="showSection('browse')">🏭 Browse ASR Suppliers</span>
-              <span class="sc-alert-cta" style="background:#fff; color:#131921; border:1px solid #a88734; cursor:pointer;">Upload Invoice</span>
-            </div>
-          </div>
-        </div>
-        <div class="sc-widget">
-          <div class="sc-widget-header">Account Health Rating <span style="background:#FFF3CD; color:#C7511F; font-size:12px; padding:3px 10px; border-radius:3px; border:1px solid #f0c060;">At Risk — 312</span></div>
-          <div class="sc-widget-body" style="font-size:13px; color:#555; line-height:1.6;">Sellers sourcing from ASR-registered suppliers have 40% fewer account health violations. Switching to a verified supply chain is the most reliable path to restoring and maintaining a healthy score.</div>
-        </div>
-      </div>
-    </div>
+    <!-- Supplier directory (simple) -->
+    <hr class="divider" />
+    <div class="section-label">Browse ASR-registered suppliers</div>
 
-    <div style="text-align:center; margin-top:24px;">
-      <button class="btn-primary" style="max-width:300px; padding:12px; font-size:14px;" onclick="showSection('browse')">Next: Browse ASR Suppliers →</button>
+    <div class="filter-row">
+      <button class="fcat active" onclick="filter('all',this)">All</button>
+      <button class="fcat" onclick="filter('Electronics',this)">Electronics</button>
+      <button class="fcat" onclick="filter('Fashion',this)">Fashion</button>
+      <button class="fcat" onclick="filter('Home & Kitchen',this)">Home &amp; Kitchen</button>
+      <button class="fcat" onclick="filter('Beauty',this)">Beauty</button>
+      <button class="fcat" onclick="filter('Sports',this)">Sports</button>
+      <button class="fcat" onclick="filter('Grocery',this)">Grocery</button>
+      <button class="fcat" onclick="filter('Toys',this)">Toys</button>
+      <button class="fcat" onclick="filter('Automotive',this)">Automotive</button>
+      <div class="fsearch"><input id="sq" placeholder="Search…" oninput="doFilter()" /><button>🔍</button></div>
+    </div>
+    <div style="font-size:12px;color:#555;margin-bottom:12px;" id="scnt">Showing 16 suppliers</div>
+    <div class="sup-grid" id="supGrid"></div>
+    <div id="noSup" style="display:none;text-align:center;padding:40px;color:#888;font-size:13px;">No suppliers found.</div>
+
+    <div class="center" style="margin-top:24px;">
+      <button class="btn btn-orange" onclick="show('benefits')">Next: See the Impact →</button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════
-       SECTION 2 — BROWSE & CONNECT
-  ═══════════════════════════════ -->
-  <div class="section-panel" id="section-browse">
+  <!-- ═══════════════ PANEL 3 — THE IMPACT ═══════════════ -->
+  <div class="panel" id="panel-benefits">
 
-    <div class="asr-hero">
-      <h1>Amazon <span>Supplier Registry</span> (ASR)</h1>
-      <p>A supplier discovery and verification platform built into Seller Central. Every supplier is proactively verified by Amazon — Authorized Distributors and Direct Suppliers only. Sourcing from an ASR-registered supplier clears your supply chain at listing, with no documentation burden on you.</p>
-      <div class="asr-stats">
-        <div class="asr-stat-box"><div class="asr-stat-num">500+</div><div class="asr-stat-label">Registered Suppliers</div></div>
-        <div class="asr-stat-box"><div class="asr-stat-num">30+</div><div class="asr-stat-label">Product Categories</div></div>
-        <div class="asr-stat-box"><div class="asr-stat-num">Bypassed</div><div class="asr-stat-label">Gating for ASR-sourced listings</div></div>
-        <div class="asr-stat-box"><div class="asr-stat-num">Day 1</div><div class="asr-stat-label">Go-Live for New Sellers</div></div>
+    <div class="page-title">The Impact — What changes when verification moves upstream</div>
+    <div class="page-sub">ASR shifts supply chain verification from the listing level to the supplier level. At hundreds of millions of listing approvals per year, that shift is the real unlock.</div>
+
+    <!-- 3 big numbers -->
+    <div class="impact-grid" style="margin-bottom:28px;">
+      <div class="impact-card" style="border-top:3px solid #067D62;">
+        <div class="impact-num" style="color:#067D62;">Day 1</div>
+        <div class="impact-label">New sellers sourcing via ASR can launch a buyable offer on day one — no verification wait, no cold-start delay</div>
       </div>
-    </div>
-
-    <!-- Two pathways -->
-    <div class="section-title">Choose your sourcing pathway</div>
-    <div class="callout amber">
-      <span class="callout-icon">🔀</span>
-      <div>ASR offers <strong>two pathways</strong> — both lead to a verified supply chain and reduced verification friction. Sellers choose whichever fits their sourcing model.</div>
-    </div>
-
-    <div class="pathway-toggle">
-      <div class="pathway-btn active" onclick="setPathway('registry', this)">
-        <div class="pathway-btn-title">🏭 Browse ASR Registry</div>
-        <div class="pathway-btn-desc">Discover and connect with Amazon-verified Authorized Distributors and Direct Suppliers across 30+ categories. Supply chain is pre-cleared — no paperwork at listing.</div>
-        <span class="pathway-btn-badge">Recommended — Fastest Path to Launch</span>
+      <div class="impact-card" style="border-top:3px solid #FF9900;">
+        <div class="impact-num" style="color:#FF9900;">100M+</div>
+        <div class="impact-label">Listing approvals per year that can bypass individual supply chain verification when sourced through ASR</div>
       </div>
-      <div class="pathway-btn" onclick="setPathway('byos', this)">
-        <div class="pathway-btn-title">📋 Bring Your Own Supplier</div>
-        <div class="pathway-btn-desc">Already have a supplier? Submit them for Amazon Assisted Supplier Verification. Once verified, your supply chain is cleared and they become part of your private verified network.</div>
-        <span class="pathway-btn-badge">Amazon Assisted Supplier Verification</span>
-      </div>
-    </div>
-
-    <!-- Pathway 1: Browse Registry -->
-    <div class="pathway-panel active" id="pathway-registry">
-      <div class="section-title">Discover suppliers in a growing number of categories</div>
-      <div class="spn-filter-row">
-        <button class="spn-cat-btn active" onclick="spnFilter('all',this)">All</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Electronics',this)">Electronics</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Fashion',this)">Fashion</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Home & Kitchen',this)">Home &amp; Kitchen</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Beauty',this)">Beauty</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Sports',this)">Sports</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Grocery',this)">Grocery</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Toys',this)">Toys</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Automotive',this)">Automotive</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Distributor',this)">Authorized Distributors</button>
-        <button class="spn-cat-btn" onclick="spnFilter('Manufacturer',this)">Direct Suppliers</button>
-        <div class="spn-search">
-          <input type="text" id="spnSearchInput" placeholder="Search suppliers…" oninput="spnFilterSuppliers()" />
-          <button>🔍</button>
-        </div>
-      </div>
-      <div style="font-size:13px; color:#555; margin-bottom:16px;" id="spnCount">Showing 16 suppliers</div>
-      <div class="spn-grid" id="spnGrid"></div>
-      <div id="spnNoResults" style="display:none; text-align:center; padding:60px; color:#888; font-size:14px;">No suppliers found. Try a different search or category.</div>
-    </div>
-
-    <!-- Pathway 2: Bring Your Own Supplier -->
-    <div class="pathway-panel" id="pathway-byos">
-      <div class="callout blue">
-        <span class="callout-icon">ℹ️</span>
-        <div><strong>Amazon Assisted Supplier Verification:</strong> Submit your existing supplier for Amazon's verification. We'll verify their supply chain using our infrastructure — same standard as ASR. Once verified, your listings sourced from them are cleared without further documentation.</div>
-      </div>
-      <div class="byos-form">
-        <div style="font-size:15px; font-weight:700; margin-bottom:16px; color:#0F1111;">Submit a supplier for verification</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Supplier / Company Name *</label>
-            <input class="form-input" type="text" placeholder="e.g. Sharma Electronics Pvt Ltd" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Supplier Type *</label>
-            <select class="form-select">
-              <option>Select type…</option>
-              <option>Authorized Distributor</option>
-              <option>Direct Supplier / Manufacturer</option>
-              <option>Brand Owner</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">GSTIN / Business Registration No.</label>
-            <input class="form-input" type="text" placeholder="22AAAAA0000A1Z5" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Product Category *</label>
-            <select class="form-select">
-              <option>Select category…</option>
-              <option>Electronics</option><option>Fashion</option><option>Home &amp; Kitchen</option>
-              <option>Beauty</option><option>Sports</option><option>Grocery</option>
-              <option>Toys</option><option>Automotive</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Supplier Website / Contact</label>
-          <input class="form-input" type="text" placeholder="https://supplier-website.com" />
-        </div>
-        <div style="display:flex; gap:10px; margin-top:6px;">
-          <button class="btn-primary" style="max-width:240px; padding:10px; font-size:13px;">Submit for Verification</button>
-          <button class="btn-secondary" style="padding:10px 16px; font-size:13px;">Save as Draft</button>
-        </div>
-        <div style="margin-top:16px; font-size:12px; color:#888; line-height:1.6;">Verification typically completes in 5–7 business days. You'll be notified when your supplier is cleared. A verification service fee applies for Assisted Supplier Verification.</div>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:28px;">
-      <button class="btn-primary" style="max-width:300px; padding:12px; font-size:14px;" onclick="showSection('benefits')">Next: See the Full Impact →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════
-       SECTION 3 — REDUCED BURDEN
-  ═══════════════════════════════ -->
-  <div class="section-panel" id="section-benefits">
-
-    <div class="benefits-hero">
-      <h2>ASR removes friction sellers face today — at every stage</h2>
-      <p>New sellers drop out because they can't figure out sourcing. Existing sellers get hit with enforcements from unknowingly bad supply chains. ASR fixes both — by shifting verification upstream to the supplier, before inventory ever enters the store.</p>
-    </div>
-
-    <!-- Problem framing from doc -->
-    <div class="section-title">The Problem ASR Solves</div>
-    <div class="sc-row" style="margin-bottom:24px;">
-      <div class="sc-col">
-        <div class="sc-widget">
-          <div class="sc-widget-header" style="background:#FEF0EF; color:#C40000;">🚨 New Seller Cold-Start Problem</div>
-          <div class="sc-widget-body" style="font-size:13px; color:#444; line-height:1.7;">New sellers spend weeks navigating sourcing decisions with no reliable way to identify verified suppliers. They often fall victim to bad actors or can't find how to fast-track products into Amazon's supply chain. Many abandon selling entirely before their first listing goes live.</div>
-        </div>
-      </div>
-      <div class="sc-col">
-        <div class="sc-widget">
-          <div class="sc-widget-header" style="background:#FEF0EF; color:#C40000;">🚨 Good Sellers, Bad Supply Chains</div>
-          <div class="sc-widget-body" style="font-size:13px; color:#444; line-height:1.7;">Legitimate sellers face enforcements from unknowingly sourcing from bad suppliers — counterfeit risks, authenticity complaints, and account suspensions they didn't cause. With no entity-level view of suppliers, Amazon can't detect supplier switching or contamination until after harm is done.</div>
-        </div>
-      </div>
-      <div class="sc-col">
-        <div class="sc-widget">
-          <div class="sc-widget-header" style="background:#FEF0EF; color:#C40000;">🚨 Verification Burden at Massive Scale</div>
-          <div class="sc-widget-body" style="font-size:13px; color:#444; line-height:1.7;">Hundreds of millions of listing approvals occur across the store. Each one can trigger supply chain verification — invoice uploads, gating reviews, and re-verification cycles that add days of delay per ASIN. The cumulative friction across that volume is enormous, and it falls entirely on sellers today.</div>
-        </div>
+      <div class="impact-card" style="border-top:3px solid #067D62;">
+        <div class="impact-num" style="color:#067D62;">Zero</div>
+        <div class="impact-label">Invoice uploads required for listings sourced from ASR-registered suppliers — verification is pre-done at the supplier level</div>
       </div>
     </div>
 
     <!-- Before / After -->
-    <div class="section-title">Before vs. After ASR</div>
-    <div class="benefits-compare">
+    <div class="section-label">Before vs. After</div>
+    <div class="compare" style="margin-bottom:28px;">
       <div class="compare-col">
-        <div class="compare-header before">❌ Without Amazon Supplier Registry</div>
+        <div class="compare-head before">❌ Without ASR — Today</div>
         <div class="compare-body">
-          <div class="compare-item"><span class="compare-icon">📄</span><div><strong>Invoice uploads across hundreds of millions of listings</strong> — each approval can trigger a supply chain verification, creating enormous cumulative friction across the store at scale.</div></div>
-          <div class="compare-item"><span class="compare-icon">⏳</span><div><strong>Days-long gating reviews per ASIN</strong> — offer-stage gating delays launch from first attempt to going live, sometimes forcing sellers to abandon Amazon before their first sale.</div></div>
-          <div class="compare-item"><span class="compare-icon">🔍</span><div><strong>Fragmented supplier search</strong> — sellers use Google, trade fairs, or cold outreach with no quality signal, making them vulnerable to bad actors.</div></div>
-          <div class="compare-item"><span class="compare-icon">⚠️</span><div><strong>Enforcement from unknown bad suppliers</strong> — legitimate sellers become victims when suppliers deviate from their stated sourcing without Amazon detecting the switch.</div></div>
-          <div class="compare-item"><span class="compare-icon">🔁</span><div><strong>Repeated reinstatements</strong> — suspended sellers go through lengthy appeals with no structural fix to the underlying supply chain risk.</div></div>
-          <div class="compare-item"><span class="compare-icon">👁️</span><div><strong>No ongoing monitoring</strong> — a supplier verified once is assumed safe forever, even if their sourcing changes months later.</div></div>
+          <div class="compare-row"><span class="ci">📄</span><div><strong>Invoice upload per ASIN</strong> — every listing can trigger a manual supply chain review</div></div>
+          <div class="compare-row"><span class="ci">⏳</span><div><strong>Days of gating delay</strong> — sellers wait for review before going live, sometimes abandoning Amazon</div></div>
+          <div class="compare-row"><span class="ci">🔍</span><div><strong>No verified supplier discovery</strong> — sellers use Google and trade fairs with no quality signal</div></div>
+          <div class="compare-row"><span class="ci">⚠️</span><div><strong>Good sellers harmed by bad suppliers</strong> — unknowingly sourcing from bad actors leads to enforcement</div></div>
+          <div class="compare-row"><span class="ci">👁️</span><div><strong>One-time vetting only</strong> — a supplier verified once is assumed safe forever, even if their sourcing changes</div></div>
         </div>
       </div>
-      <div class="compare-col">
-        <div class="compare-header after">✅ With Amazon Supplier Registry (ASR)</div>
+      <div class="compare-col after">
+        <div class="compare-head after">✅ With ASR</div>
         <div class="compare-body">
-          <div class="compare-item"><span class="compare-icon">🚫</span><div><strong>Gating bypassed at scale</strong> — when sellers source from ASR-registered suppliers, supply chain is pre-verified at the supplier level. Hundreds of millions of listing approvals that would otherwise require individual invoice review are cleared automatically.</div></div>
-          <div class="compare-item"><span class="compare-icon">⚡</span><div><strong>Streamlined path to launch</strong> — sellers who choose to source through ASR can bypass offer-stage gating entirely, going live upon completing account registration with no additional verification steps.</div></div>
-          <div class="compare-item"><span class="compare-icon">🏭</span><div><strong>Curated, verified discovery</strong> — browse Authorized Distributors and Direct Suppliers inside Seller Central. Amazon has already done the verification work.</div></div>
-          <div class="compare-item"><span class="compare-icon">🛡️</span><div><strong>Protection from bad supply chains</strong> — ASR keeps a live record of unverifiable suppliers and detects deviations, protecting sellers before harm occurs — not after.</div></div>
-          <div class="compare-item"><span class="compare-icon">✅</span><div><strong>Fewer enforcements, faster resolution</strong> — sellers sourcing via ASR see dramatically fewer authenticity complaints and supply chain-related account actions.</div></div>
-          <div class="compare-item"><span class="compare-icon">🔄</span><div><strong>Continuous monitoring, not one-time vetting</strong> — ASR re-verifies registered suppliers for supply chain deviations. "Registered" means currently verified, not verified once and assumed good forever.</div></div>
+          <div class="compare-row"><span class="ci">🚫</span><div><strong>No invoice uploads</strong> — ASR verification at the supplier level auto-clears every listing from that supplier</div></div>
+          <div class="compare-row"><span class="ci">⚡</span><div><strong>Instant listing approval</strong> — sellers who source through ASR can bypass offer-stage gating entirely</div></div>
+          <div class="compare-row"><span class="ci">🏭</span><div><strong>Curated verified discovery</strong> — browse Authorized Distributors and Direct Suppliers inside Seller Central</div></div>
+          <div class="compare-row"><span class="ci">🛡️</span><div><strong>Proactive protection</strong> — ASR flags supplier deviations before they cause seller harm, not after</div></div>
+          <div class="compare-row"><span class="ci">🔄</span><div><strong>Continuous monitoring</strong> — "Registered" means currently verified, not verified once and assumed good forever</div></div>
         </div>
       </div>
     </div>
 
-    <!-- Core Tenets -->
-    <div class="section-title">How ASR Works — Core Tenets</div>
-    <div class="tenets-grid">
-      <div class="tenet-card">
-        <div class="tenet-num">Tenet 1</div>
-        <div class="tenet-title">We verify the supplier, so sellers don't have to</div>
-        <div class="tenet-desc">We proactively verify supplier supply chains through our infrastructure and make the outcome visible. A supplier in the registry means Amazon has done the work — sellers source with confidence, not guesswork.</div>
+    <!-- Value exchange — simple two col -->
+    <div class="section-label">Who gets what</div>
+    <div class="grid2" style="margin-bottom:28px;">
+      <div class="card" style="border-top:3px solid #1a56b0;">
+        <div class="card-icon">🏭</div>
+        <div class="card-title" style="color:#1a56b0;">Suppliers — pay a subscription, gain distribution</div>
+        <div class="card-body">
+          Low-cost subscription to enroll → visibility to Amazon's full seller base as a trusted sourcing option → access to Amazon Supply Chain Services (ASCS) for warehousing and delivery.
+        </div>
+        <span class="tag blue">Suppliers fund the registry</span>
       </div>
-      <div class="tenet-card">
-        <div class="tenet-num">Tenet 2</div>
-        <div class="tenet-title">We offer choice, not a requirement</div>
-        <div class="tenet-desc">Sellers can pick a verified supplier from the registry or bring their own for verification. Both pathways lead to the same outcome: a verified supply chain and a streamlined path to selling. ASR is an available option that removes friction — sellers who use it benefit from faster launch and less documentation overhead.</div>
-      </div>
-      <div class="tenet-card">
-        <div class="tenet-num">Tenet 3</div>
-        <div class="tenet-title">We earn trust continuously, not once</div>
-        <div class="tenet-desc">A supplier verified at enrollment but sourcing from a counterfeiter six months later loses registry status. We continuously monitor for supply chain deviations. "Registered" always means currently verified.</div>
-      </div>
-      <div class="tenet-card">
-        <div class="tenet-num">Tenet 4</div>
-        <div class="tenet-title">We shift verification upstream</div>
-        <div class="tenet-desc">Every verification completed at the supplier level is one less verification a seller faces at listing. We move the cost of verification to where it belongs — before inventory enters our store, not after a seller tries to list.</div>
-      </div>
-      <div class="tenet-card">
-        <div class="tenet-num">Tenet 5</div>
-        <div class="tenet-title">Suppliers fund the registry, sellers pay nothing</div>
-        <div class="tenet-desc">Suppliers pay a low-cost subscription to maintain registry status — gaining distribution reach and access to Amazon Supply Chain Services (ASCS). Sellers pay nothing additional to source from registered suppliers.</div>
-      </div>
-      <div class="tenet-card">
-        <div class="tenet-num">Tenet 6</div>
-        <div class="tenet-title">The registry is self-reinforcing</div>
-        <div class="tenet-desc">Suppliers enroll for distribution reach. Sellers source to eliminate friction. Amazon benefits from verified supply chains that reduce enforcement cost. Every participant's incentive reinforces the others.</div>
+      <div class="card" style="border-top:3px solid #067D62;">
+        <div class="card-icon">🛒</div>
+        <div class="card-title" style="color:#067D62;">Sellers — free access, less friction</div>
+        <div class="card-body">
+          Free for all professional-tier sellers → no invoice uploads → faster listing approvals → protection from bad supply chains → optional end-to-end sourcing via ASCS.
+        </div>
+        <span class="tag green">Sellers pay nothing extra</span>
       </div>
     </div>
 
-    <!-- Value Exchange -->
-    <div class="section-title">Who Gets What — The Value Exchange</div>
-    <div class="value-exchange">
-      <div class="value-col">
-        <div class="value-header supplier">🏭 Suppliers — What They Pay &amp; Get</div>
-        <div class="value-body">
-          <div class="value-item"><span>💳</span><div><strong>Pay:</strong> Low-cost subscription fee to enroll and maintain ASR status</div></div>
-          <div class="value-item"><span>📢</span><div><strong>Get:</strong> Visibility to Amazon's entire selling partner base as a trusted, verified sourcing option</div></div>
-          <div class="value-item"><span>🚚</span><div><strong>Get:</strong> Access to Amazon Supply Chain Services (ASCS) — warehousing, freight, and delivery as a distribution channel</div></div>
-          <div class="value-item"><span>📈</span><div><strong>Get:</strong> Growing demand as more sellers adopt ASR as their primary sourcing mode</div></div>
-          <div class="value-item"><span>✅</span><div><strong>Get:</strong> ASR-verified badge that signals trust and quality to all prospective sellers</div></div>
-        </div>
-      </div>
-      <div class="value-col">
-        <div class="value-header seller">🛒 Sellers — What They Pay &amp; Get</div>
-        <div class="value-body">
-          <div class="value-item"><span>🚫</span><div><strong>Pay nothing extra</strong> — access to ASR is free for all professional-tier sellers</div></div>
-          <div class="value-item"><span>⚡</span><div><strong>Get:</strong> Instant supply chain clearance at listing — no invoice uploads, no review wait</div></div>
-          <div class="value-item"><span>🛡️</span><div><strong>Get:</strong> Protection from bad supply chains — ASR flags risky suppliers before sellers source from them</div></div>
-          <div class="value-item"><span>🚀</span><div><strong>Get:</strong> Faster time-to-first-listing — new sellers launch on day one with a buyable offer</div></div>
-          <div class="value-item"><span>📦</span><div><strong>Get:</strong> Optional end-to-end sourcing-to-delivery through ASCS — custody chain visibility from supplier to customer</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Impact Metrics -->
-    <div class="section-title">Outcomes We Build Toward</div>
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-num">100M+</div>
-        <div class="metric-arrow">↓ friction</div>
-        <div class="metric-label">Listing approvals per year that could bypass individual supply chain verification when sourced through ASR — the scale where the real unlock lies</div>
-      </div>
-      <div class="metric-card red">
-        <div class="metric-num">↓</div>
-        <div class="metric-arrow">dropout</div>
-        <div class="metric-label">Reduction in new seller dropout caused by sourcing uncertainty and verification friction in the first 90 days</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-num">↓</div>
-        <div class="metric-arrow">enforcements</div>
-        <div class="metric-label">Fewer enforcement actions against legitimate sellers harmed by undetected supply chain deviations</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-num">↑</div>
-        <div class="metric-arrow">selection</div>
-        <div class="metric-label">Faster ASIN launch rates as offer-stage gating is bypassed for ASR-sourced listings, growing store selection</div>
-      </div>
-    </div>
-
-    <!-- End-to-end timeline -->
-    <div class="section-title">The Full Seller Journey — End to End</div>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-title">📝 New seller begins account registration</div>
-          <div class="timeline-desc">At the Supply Chain step of registration, the seller is surfaced ASR as a way to skip supply chain verification and go live faster. This is the primary discovery point — no prior knowledge of ASR needed.</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-title">🔍 Seller browses ASR — finds a verified supplier</div>
-          <div class="timeline-desc">Inside the ASR marketplace in Seller Central, the seller filters by category and supplier type (Authorized Distributor or Direct Supplier), reads profiles, and selects a match. Amazon has already done the verification.</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-title">📨 Seller connects with supplier — requests a quote</div>
-          <div class="timeline-desc">With one click, the seller contacts the supplier. The connection is logged in Seller Central, creating a traceable sourcing record. Pricing, lead times, and samples are negotiated directly.</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-title">📦 Inventory sourced — routed through ASCS</div>
-          <div class="timeline-desc">Registered suppliers route inventory through Amazon Supply Chain Services for end-to-end custody-chain visibility. Amazon tracks the inventory journey from supplier to fulfillment center, creating a verifiable chain of custody.</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot green"></div>
-        <div class="timeline-card" style="border-color:#a8d8b0;">
-          <div class="timeline-title" style="color:#067D62;">✅ Listing goes live — supply chain pre-cleared, zero friction</div>
-          <div class="timeline-desc">Because the supplier is ASR-registered and the sourcing relationship is on file, the ASIN bypasses offer-stage gating entirely. No invoice to upload, no review wait. The listing is approved and the seller's account health stays green.</div>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot green"></div>
-        <div class="timeline-card" style="border-color:#a8d8b0;">
-          <div class="timeline-title" style="color:#067D62;">🔄 Continuous monitoring protects sellers going forward</div>
-          <div class="timeline-desc">ASR continuously monitors registered suppliers for supply chain deviations, contamination, and sourcing changes. If a supplier's status changes, sellers are alerted before it affects their listings — proactive protection, not reactive enforcement.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Final CTA -->
-    <div style="background:linear-gradient(135deg,#131921,#1b2b3a); border-radius:8px; padding:32px; text-align:center;">
-      <div style="color:#FF9900; font-size:20px; font-weight:800; margin-bottom:8px;">Amazon Supplier Registry — the supply chain unlock at listing scale</div>
-      <div style="color:#c8d0d8; font-size:14px; margin-bottom:20px; max-width:520px; margin-left:auto; margin-right:auto; line-height:1.7;">With hundreds of millions of listing approvals occurring across the store, shifting verification upstream to the supplier level — rather than at each individual listing — is where the most significant reduction in friction lies. Sellers who choose ASR benefit from that shift directly.</div>
-      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-        <button class="btn-primary" style="max-width:220px; padding:12px 20px; font-size:14px;" onclick="showSection('browse')">Browse ASR Suppliers</button>
-        <button class="btn-secondary" style="padding:12px 20px; font-size:14px; background:rgba(255,255,255,0.08); border-color:#3a4553; color:#fff;" onclick="showSection('discover')">← View Entry Points</button>
+    <!-- End CTA -->
+    <div style="background:linear-gradient(135deg,#131921,#1b2b3a);border-radius:8px;padding:28px;text-align:center;">
+      <div style="color:#FF9900;font-size:18px;font-weight:700;margin-bottom:8px;">ASR — the supply chain unlock at listing scale</div>
+      <div style="color:#c8d0d8;font-size:13px;max-width:480px;margin:0 auto 20px;line-height:1.6;">Shifting verification from the listing to the supplier means hundreds of millions of approvals flow faster — and sellers spend their time selling, not submitting paperwork.</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-orange" onclick="show('browse')">Browse ASR Suppliers</button>
+        <button class="btn btn-outline" style="background:rgba(255,255,255,0.08);border-color:#3a4553;color:#fff;" onclick="show('discover')">← The Problem</button>
       </div>
     </div>
 
   </div>
-</div><!-- /page-wrap -->
 
-<!-- SUPPLIER DETAIL MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-logo" id="mLogo"></div>
-      <div style="flex:1; min-width:0;">
-        <div class="modal-name" id="mName"></div>
-        <div class="modal-sub" id="mSub"></div>
-        <div id="mBadges" style="margin-top:6px;"></div>
-        <div id="mRating" style="margin-top:4px;"></div>
+</div><!-- /wrap -->
+
+<!-- MODAL -->
+<div class="modal-bg" id="mBg" onclick="closeMOutside(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-logo-big" id="mLogo"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:16px;font-weight:700;" id="mName"></div>
+        <div style="font-size:12px;color:#888;margin-top:2px;" id="mSub"></div>
+        <div id="mBadges" style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap;"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeM()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="modal-section">
-        <div class="modal-section-title">About this Supplier</div>
-        <p class="modal-desc" id="mDesc"></p>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">Key Certifications &amp; Highlights</div>
-        <div class="tag-row" id="mTags"></div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">Supplier Performance</div>
-        <div class="modal-stats-row" id="mStats"></div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">Products Supplied</div>
-        <div class="tag-row" id="mProducts"></div>
-      </div>
-      <div class="modal-section">
-        <div class="modal-section-title">Amazon Supply Chain Services (ASCS) Integration</div>
-        <div class="ascs-block">
-          <div style="font-size:24px; flex-shrink:0;">🚚</div>
-          <div class="ascs-block-text">This supplier routes through <strong>Amazon Supply Chain Services (ASCS)</strong>, giving you end-to-end custody-chain visibility from sourcing to delivery. Inventory moves directly from supplier to Amazon fulfillment center with full traceability — no additional logistics coordination needed on your end.</div>
-        </div>
-      </div>
-      <div class="callout" style="margin-top:4px; margin-bottom:0;">
-        <span class="callout-icon">✅</span>
-        <div>Sourcing from this ASR-registered supplier <strong>clears your supply chain verification automatically</strong>. No invoice upload required at listing or during enforcement review.</div>
+      <div class="msec-label">About</div>
+      <div style="font-size:13px;color:#444;line-height:1.6;" id="mDesc"></div>
+      <div class="msec-label">Certifications</div>
+      <div class="mtag-row" id="mTags"></div>
+      <div class="msec-label">Performance</div>
+      <div class="mstats" id="mStats"></div>
+      <div class="msec-label">Products</div>
+      <div class="mtag-row" id="mProds"></div>
+      <div class="alert-box ok" style="margin-top:14px;">
+        ✅ <strong>ASR supplier — no invoice upload required.</strong> Sourcing from this supplier satisfies supply chain verification at every listing automatically.
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-primary">📨 Connect with Supplier</button>
-      <button class="btn-secondary">⭐ Save to My Suppliers</button>
-      <button class="btn-secondary">📋 View Catalog</button>
+    <div class="modal-foot">
+      <button class="btn btn-orange">📨 Request Quote</button>
+      <button class="btn btn-outline">⭐ Save</button>
+      <button class="btn btn-outline">📋 Catalog</button>
     </div>
   </div>
 </div>
 
 <script>
 const suppliers = [
-  { id:1, name:"TechSource India", i:"TS", c:"#0066cc", cat:"Electronics", type:"Distributor",
-    loc:"Bengaluru, KA", moq:"₹50,000", r:4.8, rv:312,
-    desc:"TechSource India is an authorized distributor of smartphones, accessories, audio equipment, and smart home devices. All products are brand-authorized with full warranty and ISI certification. ASR-verified for supply chain integrity.",
-    tags:["Brand Authorized","ISI Certified","Pan-India Delivery","ASR Verified","ASCS Integrated"],
-    products:["Smartphones","Earphones","Smartwatches","Chargers","Smart Home Devices"],
-    stats:{"ASR Status":"Active","Orders/Month":"2,400+","On-time Delivery":"97%"} },
-  { id:2, name:"FashionForge Textiles", i:"FF", c:"#9c27b0", cat:"Fashion", type:"Manufacturer",
-    loc:"Surat, GJ", moq:"₹20,000", r:4.6, rv:218,
-    desc:"FashionForge Textiles is a direct manufacturer of readymade garments, ethnic wear, and western fashion. Offers private labeling, custom packaging, and GST-compliant invoicing for Amazon sellers.",
-    tags:["Direct Manufacturer","Private Label","GST Compliant","FBA Ready","ASR Verified"],
-    products:["Kurtis","T-Shirts","Sarees","Jeans","Kids Wear","Ethnic Sets"],
-    stats:{"ASR Status":"Active","Orders/Month":"1,800+","On-time Delivery":"95%"} },
-  { id:3, name:"HomeCraft Supplies", i:"HC", c:"#e65100", cat:"Home & Kitchen", type:"Distributor",
-    loc:"Mumbai, MH", moq:"₹15,000", r:4.9, rv:445,
-    desc:"HomeCraft Supplies is an authorized distributor of kitchen appliances, cookware, home décor, and furnishings. Products are tested to BIS standards and are Amazon FBA-ready.",
-    tags:["BIS Certified","Authorized Distributor","FBA Ready","White Label","ASR Verified"],
-    products:["Cookware Sets","Kitchen Appliances","Storage Solutions","Home Décor","Bedding"],
-    stats:{"ASR Status":"Active","Orders/Month":"3,200+","On-time Delivery":"98%"} },
-  { id:4, name:"GlowBeauty Distributors", i:"GB", c:"#d81b60", cat:"Beauty", type:"Distributor",
-    loc:"Delhi, DL", moq:"₹10,000", r:4.7, rv:189,
-    desc:"GlowBeauty Distributors is an authorized distributor of skincare, haircare, and cosmetics from CDSCO-approved brands. All products include batch numbers, expiry dates, and dermatologist-tested certificates.",
-    tags:["Authorized Distributor","CDSCO Approved","Dermatologist Tested","ASR Verified","Eco Packaging"],
-    products:["Skincare","Haircare","Cosmetics","Fragrances","Men's Grooming"],
-    stats:{"ASR Status":"Active","Orders/Month":"900+","On-time Delivery":"96%"} },
-  { id:5, name:"SportZone Wholesale", i:"SZ", c:"#2e7d32", cat:"Sports", type:"Distributor",
-    loc:"Jalandhar, PB", moq:"₹25,000", r:4.5, rv:134,
-    desc:"SportZone Wholesale is an authorized distributor of sports goods, offering fitness equipment, outdoor gear, and team sports supplies. All products are ISI-marked and meet international safety standards.",
-    tags:["ISI Marked","Authorized Distributor","International Standards","ASR Verified","Bulk Pricing"],
-    products:["Fitness Equipment","Yoga Mats","Cricket Gear","Outdoor Sports","Cycling"],
-    stats:{"ASR Status":"Active","Orders/Month":"1,100+","On-time Delivery":"94%"} },
-  { id:6, name:"FreshFarm Groceries", i:"FG", c:"#558b2f", cat:"Grocery", type:"Manufacturer",
-    loc:"Hyderabad, TS", moq:"₹8,000", r:4.4, rv:276,
-    desc:"FreshFarm Groceries is a direct supplier of packaged food, organic produce, snacks, and staples. All products are FSSAI licensed and GST-invoiced, packaged to Amazon's grocery requirements.",
-    tags:["FSSAI Licensed","Direct Supplier","Organic Options","GST Invoiced","ASR Verified"],
-    products:["Staples","Packaged Snacks","Organic Foods","Beverages","Spices"],
-    stats:{"ASR Status":"Active","Orders/Month":"4,500+","On-time Delivery":"93%"} },
-  { id:7, name:"PlayWorld Toys", i:"PW", c:"#f57c00", cat:"Toys", type:"Manufacturer",
-    loc:"Ahmedabad, GJ", moq:"₹12,000", r:4.6, rv:203,
-    desc:"PlayWorld Toys is a direct manufacturer and ASR-registered supplier of educational toys, action figures, and board games. All toys are BIS certified and safe for children.",
-    tags:["BIS Certified","Direct Manufacturer","Child Safe","Age Graded","ASR Verified"],
-    products:["Educational Toys","Board Games","Outdoor Play","Action Figures","STEM Kits"],
-    stats:{"ASR Status":"Active","Orders/Month":"1,600+","On-time Delivery":"95%"} },
-  { id:8, name:"AutoParts Direct", i:"AP", c:"#37474f", cat:"Automotive", type:"Distributor",
-    loc:"Pune, MH", moq:"₹30,000", r:4.3, rv:98,
-    desc:"AutoParts Direct is an authorized distributor of genuine and OEM-equivalent auto parts for all major vehicle brands. Products are tested to AIS standards with full traceability through ASCS.",
-    tags:["Authorized Distributor","OEM Equivalent","AIS Standards","ASR Verified","ASCS Integrated"],
-    products:["Car Accessories","Bike Parts","Engine Components","Car Care","Lighting"],
-    stats:{"ASR Status":"Active","Orders/Month":"780+","On-time Delivery":"91%"} },
-  { id:9, name:"DigiGadget Hub", i:"DG", c:"#1565c0", cat:"Electronics", type:"Distributor",
-    loc:"Chennai, TN", moq:"₹40,000", r:4.7, rv:267,
-    desc:"DigiGadget Hub is an authorized distributor of laptops, tablets, gaming peripherals, and networking equipment. Offers seller-ready bundles with Amazon-compliant packaging.",
-    tags:["Authorized Distributor","Amazon Compliant Packaging","Warranty Cards","ASR Verified","GST Invoiced"],
-    products:["Laptops","Tablets","Gaming Gear","Networking","Cameras"],
-    stats:{"ASR Status":"Active","Orders/Month":"1,300+","On-time Delivery":"96%"} },
-  { id:10, name:"ThreadMaster Exports", i:"TM", c:"#6a1b9a", cat:"Fashion", type:"Manufacturer",
-    loc:"Tirupur, TN", moq:"₹18,000", r:4.8, rv:341,
-    desc:"ThreadMaster Exports is a direct manufacturer of knitwear — T-shirts, hoodies, and activewear. Offers custom embroidery, printing, and private label manufacturing. OCA certified, export quality.",
-    tags:["Direct Manufacturer","Custom Embroidery","Private Label","OCA Certified","ASR Verified"],
-    products:["T-Shirts","Hoodies","Activewear","Polo Shirts","Nightwear"],
-    stats:{"ASR Status":"Active","Orders/Month":"2,900+","On-time Delivery":"97%"} },
-  { id:11, name:"NutriLife Foods", i:"NL", c:"#00695c", cat:"Grocery", type:"Manufacturer",
-    loc:"Coimbatore, TN", moq:"₹6,000", r:4.5, rv:182,
-    desc:"NutriLife Foods is a direct manufacturer of health foods, protein supplements, and organic superfoods. All products are FSSAI and ISO certified with full nutritional labeling.",
-    tags:["Direct Manufacturer","ISO Certified","FSSAI","ASR Verified","Vegan Options"],
-    products:["Protein Supplements","Herbal Teas","Superfoods","Dried Fruits","Health Snacks"],
-    stats:{"ASR Status":"Active","Orders/Month":"620+","On-time Delivery":"95%"} },
-  { id:12, name:"KidZone Manufacturers", i:"KZ", c:"#c0392b", cat:"Toys", type:"Manufacturer",
-    loc:"Delhi, DL", moq:"₹9,000", r:4.4, rv:156,
-    desc:"KidZone Manufacturers is a direct supplier of plush toys, baby products, and infant learning materials. Products conform to EN71 and BIS standards for full child safety compliance.",
-    tags:["Direct Manufacturer","EN71 Compliant","BIS Certified","ASR Verified","Non-Toxic Materials"],
-    products:["Plush Toys","Baby Rattles","Soft Blocks","Learning Toys","Infant Gear"],
-    stats:{"ASR Status":"Active","Orders/Month":"870+","On-time Delivery":"93%"} },
-  { id:13, name:"PureGlow Cosmetics", i:"PG", c:"#ad1457", cat:"Beauty", type:"Manufacturer",
-    loc:"Kochi, KL", moq:"₹7,500", r:4.6, rv:211,
-    desc:"PureGlow Cosmetics is a direct manufacturer of Ayurvedic beauty products and herbal hair care under ISO 22716 GMP certified facilities. Offers white-label and custom formulations.",
-    tags:["Direct Manufacturer","ISO 22716 GMP","Ayurvedic","ASR Verified","Vegan Certified"],
-    products:["Ayurvedic Face Packs","Hair Oils","Natural Soaps","Herbal Creams","Lip Care"],
-    stats:{"ASR Status":"Active","Orders/Month":"540+","On-time Delivery":"96%"} },
-  { id:14, name:"FitGear Pro", i:"FP", c:"#00838f", cat:"Sports", type:"Manufacturer",
-    loc:"Ludhiana, PB", moq:"₹20,000", r:4.7, rv:178,
-    desc:"FitGear Pro is a direct manufacturer of premium gym equipment, resistance bands, and yoga accessories. Offers branded and white-label products with Amazon-ready barcoding.",
-    tags:["Direct Manufacturer","Premium Quality","White Label","ASR Verified","Amazon Barcoded"],
-    products:["Dumbbells","Resistance Bands","Yoga Accessories","Gym Bags","Jump Ropes"],
-    stats:{"ASR Status":"Active","Orders/Month":"950+","On-time Delivery":"97%"} },
-  { id:15, name:"SmartHome Solutions", i:"SH", c:"#283593", cat:"Home & Kitchen", type:"Distributor",
-    loc:"Noida, UP", moq:"₹22,000", r:4.8, rv:389,
-    desc:"SmartHome Solutions is an authorized distributor of IoT devices, smart lighting, and home security products. All devices are BEE rated and carry CE/FCC marks for compliance.",
-    tags:["Authorized Distributor","BEE Rated","CE/FCC Certified","ASR Verified","ASCS Integrated"],
-    products:["Smart Bulbs","Security Cameras","Smart Plugs","Door Locks","Air Purifiers"],
-    stats:{"ASR Status":"Active","Orders/Month":"1,050+","On-time Delivery":"98%"} },
-  { id:16, name:"MotoXtra Parts", i:"MX", c:"#4e342e", cat:"Automotive", type:"Manufacturer",
-    loc:"Faridabad, HR", moq:"₹35,000", r:4.5, rv:112,
-    desc:"MotoXtra Parts is a direct manufacturer of two-wheeler and four-wheeler parts, consumables, and detailing products. Known for strict quality checks and fast dispatch via ASCS.",
-    tags:["Direct Manufacturer","Strict QC","Two & Four Wheeler","ASR Verified","ASCS Integrated"],
-    products:["Engine Oil","Brake Pads","Electrical Parts","Body Kits","Car Detailing"],
-    stats:{"ASR Status":"Active","Orders/Month":"640+","On-time Delivery":"92%"} }
+  {id:1,name:"TechSource India",i:"TS",c:"#0066cc",cat:"Electronics",type:"Distributor",loc:"Bengaluru, KA",moq:"₹50,000",r:4.8,rv:312,desc:"Authorized distributor of smartphones, accessories, and smart home devices. Brand-authorized, ISI certified, ASCS integrated.",tags:["Brand Authorized","ISI Certified","ASCS Integrated","ASR Verified"],products:["Smartphones","Earphones","Smartwatches","Chargers"],stats:{"ASR Status":"Active","Orders/Mo":"2,400+","On-Time":"97%"}},
+  {id:2,name:"FashionForge Textiles",i:"FF",c:"#9c27b0",cat:"Fashion",type:"Manufacturer",loc:"Surat, GJ",moq:"₹20,000",r:4.6,rv:218,desc:"Direct manufacturer of readymade garments and ethnic wear. Private labeling, custom packaging, GST compliant.",tags:["Direct Manufacturer","Private Label","FBA Ready","ASR Verified"],products:["Kurtis","T-Shirts","Sarees","Jeans","Kids Wear"],stats:{"ASR Status":"Active","Orders/Mo":"1,800+","On-Time":"95%"}},
+  {id:3,name:"HomeCraft Supplies",i:"HC",c:"#e65100",cat:"Home & Kitchen",type:"Distributor",loc:"Mumbai, MH",moq:"₹15,000",r:4.9,rv:445,desc:"Authorized distributor of kitchen appliances, cookware, and home décor. BIS certified, FBA ready.",tags:["BIS Certified","Authorized Distributor","FBA Ready","ASR Verified"],products:["Cookware","Appliances","Storage","Home Décor"],stats:{"ASR Status":"Active","Orders/Mo":"3,200+","On-Time":"98%"}},
+  {id:4,name:"GlowBeauty Distributors",i:"GB",c:"#d81b60",cat:"Beauty",type:"Distributor",loc:"Delhi, DL",moq:"₹10,000",r:4.7,rv:189,desc:"Authorized distributor of skincare, haircare, and cosmetics. CDSCO approved, dermatologist tested.",tags:["CDSCO Approved","Dermatologist Tested","ASR Verified","Eco Packaging"],products:["Skincare","Haircare","Cosmetics","Fragrances"],stats:{"ASR Status":"Active","Orders/Mo":"900+","On-Time":"96%"}},
+  {id:5,name:"SportZone Wholesale",i:"SZ",c:"#2e7d32",cat:"Sports",type:"Distributor",loc:"Jalandhar, PB",moq:"₹25,000",r:4.5,rv:134,desc:"Authorized distributor of sports goods, fitness equipment, and outdoor gear. ISI marked, international standards.",tags:["ISI Marked","Authorized Distributor","ASR Verified"],products:["Fitness Equipment","Yoga Mats","Cricket Gear","Cycling"],stats:{"ASR Status":"Active","Orders/Mo":"1,100+","On-Time":"94%"}},
+  {id:6,name:"FreshFarm Groceries",i:"FG",c:"#558b2f",cat:"Grocery",type:"Manufacturer",loc:"Hyderabad, TS",moq:"₹8,000",r:4.4,rv:276,desc:"Direct supplier of packaged food, organic produce, and staples. FSSAI licensed, GST invoiced.",tags:["FSSAI Licensed","Direct Supplier","Organic Options","ASR Verified"],products:["Staples","Packaged Snacks","Organic Foods","Beverages"],stats:{"ASR Status":"Active","Orders/Mo":"4,500+","On-Time":"93%"}},
+  {id:7,name:"PlayWorld Toys",i:"PW",c:"#f57c00",cat:"Toys",type:"Manufacturer",loc:"Ahmedabad, GJ",moq:"₹12,000",r:4.6,rv:203,desc:"Direct manufacturer of educational toys, board games, and outdoor play equipment. BIS certified, child safe.",tags:["BIS Certified","Direct Manufacturer","Child Safe","ASR Verified"],products:["Educational Toys","Board Games","STEM Kits","Action Figures"],stats:{"ASR Status":"Active","Orders/Mo":"1,600+","On-Time":"95%"}},
+  {id:8,name:"AutoParts Direct",i:"AP",c:"#37474f",cat:"Automotive",type:"Distributor",loc:"Pune, MH",moq:"₹30,000",r:4.3,rv:98,desc:"Authorized distributor of OEM-equivalent auto parts for all major vehicle brands. AIS standards, ASCS integrated.",tags:["Authorized Distributor","OEM Equivalent","AIS Standards","ASR Verified"],products:["Car Accessories","Bike Parts","Engine Parts","Car Care"],stats:{"ASR Status":"Active","Orders/Mo":"780+","On-Time":"91%"}},
+  {id:9,name:"DigiGadget Hub",i:"DG",c:"#1565c0",cat:"Electronics",type:"Distributor",loc:"Chennai, TN",moq:"₹40,000",r:4.7,rv:267,desc:"Authorized distributor of laptops, tablets, and gaming gear. Amazon-compliant packaging, warranty cards included.",tags:["Authorized Distributor","Amazon Compliant Packaging","ASR Verified"],products:["Laptops","Tablets","Gaming Gear","Networking"],stats:{"ASR Status":"Active","Orders/Mo":"1,300+","On-Time":"96%"}},
+  {id:10,name:"ThreadMaster Exports",i:"TM",c:"#6a1b9a",cat:"Fashion",type:"Manufacturer",loc:"Tirupur, TN",moq:"₹18,000",r:4.8,rv:341,desc:"Direct manufacturer of knitwear — T-shirts, hoodies, activewear. Custom embroidery, private label, OCA certified.",tags:["Direct Manufacturer","OCA Certified","Private Label","ASR Verified"],products:["T-Shirts","Hoodies","Activewear","Polo Shirts"],stats:{"ASR Status":"Active","Orders/Mo":"2,900+","On-Time":"97%"}},
+  {id:11,name:"NutriLife Foods",i:"NL",c:"#00695c",cat:"Grocery",type:"Manufacturer",loc:"Coimbatore, TN",moq:"₹6,000",r:4.5,rv:182,desc:"Direct manufacturer of health foods and protein supplements. FSSAI and ISO certified.",tags:["ISO Certified","FSSAI","Direct Manufacturer","ASR Verified"],products:["Protein Supplements","Herbal Teas","Superfoods","Health Snacks"],stats:{"ASR Status":"Active","Orders/Mo":"620+","On-Time":"95%"}},
+  {id:12,name:"KidZone Manufacturers",i:"KZ",c:"#c0392b",cat:"Toys",type:"Manufacturer",loc:"Delhi, DL",moq:"₹9,000",r:4.4,rv:156,desc:"Direct manufacturer of plush toys and infant learning materials. EN71 and BIS certified, non-toxic materials.",tags:["EN71 Compliant","BIS Certified","Direct Manufacturer","ASR Verified"],products:["Plush Toys","Baby Rattles","Soft Blocks","Infant Gear"],stats:{"ASR Status":"Active","Orders/Mo":"870+","On-Time":"93%"}},
+  {id:13,name:"PureGlow Cosmetics",i:"PG",c:"#ad1457",cat:"Beauty",type:"Manufacturer",loc:"Kochi, KL",moq:"₹7,500",r:4.6,rv:211,desc:"Direct manufacturer of Ayurvedic beauty products. ISO 22716 GMP certified, white-label available.",tags:["ISO 22716 GMP","Direct Manufacturer","Ayurvedic","ASR Verified"],products:["Face Packs","Hair Oils","Natural Soaps","Herbal Creams"],stats:{"ASR Status":"Active","Orders/Mo":"540+","On-Time":"96%"}},
+  {id:14,name:"FitGear Pro",i:"FP",c:"#00838f",cat:"Sports",type:"Manufacturer",loc:"Ludhiana, PB",moq:"₹20,000",r:4.7,rv:178,desc:"Direct manufacturer of gym equipment and yoga accessories. Amazon barcoded, white-label options.",tags:["Direct Manufacturer","Amazon Barcoded","White Label","ASR Verified"],products:["Dumbbells","Resistance Bands","Yoga Accessories","Gym Bags"],stats:{"ASR Status":"Active","Orders/Mo":"950+","On-Time":"97%"}},
+  {id:15,name:"SmartHome Solutions",i:"SH",c:"#283593",cat:"Home & Kitchen",type:"Distributor",loc:"Noida, UP",moq:"₹22,000",r:4.8,rv:389,desc:"Authorized distributor of IoT devices and smart home products. BEE rated, CE/FCC certified, ASCS integrated.",tags:["Authorized Distributor","BEE Rated","CE/FCC","ASR Verified"],products:["Smart Bulbs","Security Cameras","Smart Plugs","Air Purifiers"],stats:{"ASR Status":"Active","Orders/Mo":"1,050+","On-Time":"98%"}},
+  {id:16,name:"MotoXtra Parts",i:"MX",c:"#4e342e",cat:"Automotive",type:"Manufacturer",loc:"Faridabad, HR",moq:"₹35,000",r:4.5,rv:112,desc:"Direct manufacturer of two and four-wheeler parts. Strict QC, ASCS integrated for fast dispatch.",tags:["Direct Manufacturer","Strict QC","ASCS Integrated","ASR Verified"],products:["Engine Oil","Brake Pads","Electrical Parts","Car Detailing"],stats:{"ASR Status":"Active","Orders/Mo":"640+","On-Time":"92%"}}
 ];
 
-function setDiscoverScenario(id, btn) {
-  document.querySelectorAll('.pathway-btn').forEach(b => b.classList.remove('active'));
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.jpill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  const map={discover:0,browse:1,benefits:2};
+  document.querySelectorAll('.jpill')[map[id]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+let curCat='all';
+function filter(cat,btn){
+  curCat=cat;
+  document.querySelectorAll('.fcat').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('#section-discover .pathway-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('discover-' + id).classList.add('active');
+  doFilter();
 }
-
-function showSection(id) {
-  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-  document.getElementById('section-' + id).classList.add('active');
-  const map = { discover:0, browse:1, benefits:2 };
-  document.querySelectorAll('.pill')[map[id]].classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function stars(r){return '★'.repeat(Math.floor(r))+(r%1>=.5?'½':'')+'☆'.repeat(5-Math.floor(r)-(r%1>=.5?1:0));}
+function doFilter(){
+  const q=(document.getElementById('sq').value||'').toLowerCase();
+  let list=suppliers;
+  if(curCat!=='all')list=list.filter(s=>s.cat===curCat);
+  if(q)list=list.filter(s=>s.name.toLowerCase().includes(q)||s.cat.toLowerCase().includes(q)||s.loc.toLowerCase().includes(q)||s.products.some(p=>p.toLowerCase().includes(q)));
+  renderSups(list);
 }
-
-function setPathway(id, btn) {
-  document.querySelectorAll('.pathway-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.pathway-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('pathway-' + id).classList.add('active');
-}
-
-let spnCurrentCat = 'all';
-let spnCurrentType = 'all';
-
-function spnFilter(cat, btn) {
-  document.querySelectorAll('.spn-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (cat === 'Distributor' || cat === 'Manufacturer') {
-    spnCurrentType = cat; spnCurrentCat = 'all';
-  } else {
-    spnCurrentCat = cat; spnCurrentType = 'all';
-  }
-  spnFilterSuppliers();
-}
-
-function stars(r) {
-  const full = Math.floor(r), half = r % 1 >= 0.5 ? 1 : 0;
-  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
-}
-
-function spnFilterSuppliers() {
-  const q = (document.getElementById('spnSearchInput').value || '').toLowerCase();
-  let list = suppliers;
-  if (spnCurrentCat !== 'all') list = list.filter(s => s.cat === spnCurrentCat);
-  if (spnCurrentType !== 'all') list = list.filter(s => s.type === spnCurrentType);
-  if (q) list = list.filter(s =>
-    s.name.toLowerCase().includes(q) || s.cat.toLowerCase().includes(q) ||
-    s.loc.toLowerCase().includes(q) || s.products.some(p => p.toLowerCase().includes(q))
-  );
-  renderSpnCards(list);
-}
-
-function renderSpnCards(list) {
-  const grid = document.getElementById('spnGrid');
-  const noR = document.getElementById('spnNoResults');
-  const cnt = document.getElementById('spnCount');
-  grid.innerHTML = '';
-  if (!list.length) { noR.style.display = 'block'; cnt.textContent = 'No suppliers found'; return; }
-  noR.style.display = 'none';
-  cnt.textContent = `Showing ${list.length} supplier${list.length !== 1 ? 's' : ''}`;
-  list.forEach(s => {
-    const typeCls = s.type === 'Distributor' ? 'dist' : 'mfr';
-    const typeLabel = s.type === 'Distributor' ? '🏬 Authorized Distributor' : '🏭 Direct Supplier';
-    const card = document.createElement('div');
-    card.className = 'spn-card';
-    card.innerHTML = `
-      <div class="spn-card-top">
-        <div class="spn-logo" style="background:${s.c}">${s.i}</div>
-        <div style="flex:1;min-width:0;">
-          <div class="spn-card-name">${s.name}</div>
-          <div class="spn-card-cat">${s.cat}</div>
-          <div class="badge-row">
-            <span class="badge-asr">✔ ASR Registered</span>
-            <span class="badge-type ${typeCls}">${typeLabel}</span>
-          </div>
-        </div>
-      </div>
-      <div class="spn-card-desc">${s.desc}</div>
-      <div class="spn-card-meta">
-        <span class="spn-meta">📍 <strong>${s.loc}</strong></span>
-        <span class="spn-meta">MOQ: <strong>${s.moq}</strong></span>
-        <span class="spn-meta"><span class="spn-stars">${stars(s.r)}</span> <span style="color:#888;">(${s.rv})</span></span>
-      </div>
-      <div class="spn-card-footer">
-        <button class="btn-primary" onclick="event.stopPropagation();openModal(${s.id})">Connect with Supplier</button>
-        <button class="btn-secondary" onclick="event.stopPropagation();openModal(${s.id})">View Details</button>
-      </div>`;
-    card.addEventListener('click', () => openModal(s.id));
-    grid.appendChild(card);
+function renderSups(list){
+  const g=document.getElementById('supGrid'),nr=document.getElementById('noSup'),cnt=document.getElementById('scnt');
+  g.innerHTML='';
+  if(!list.length){nr.style.display='block';cnt.textContent='No suppliers found';return;}
+  nr.style.display='none';
+  cnt.textContent=`Showing ${list.length} supplier${list.length!==1?'s':''}`;
+  list.forEach(s=>{
+    const typeCls=s.type==='Distributor'?'badge-dist':'badge-mfr';
+    const typeLbl=s.type==='Distributor'?'🏬 Auth. Distributor':'🏭 Direct Supplier';
+    const c=document.createElement('div');
+    c.className='sup-card';
+    c.innerHTML=`<div class="sup-card-top"><div class="sup-logo" style="background:${s.c}">${s.i}</div><div style="flex:1;min-width:0;"><div class="sup-name">${s.name}</div><div class="sup-cat">${s.cat}</div><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge-asr">✔ ASR</span><span class="${typeCls}">${typeLbl}</span></div></div></div><div class="sup-desc">${s.desc}</div><div class="sup-meta"><span>📍 ${s.loc}</span><span>MOQ ${s.moq}</span><span class="stars">${stars(s.r)}</span><span style="color:#888;">(${s.rv})</span></div><div class="sup-footer"><button class="btn btn-orange" style="flex:1;padding:7px;font-size:12px;" onclick="event.stopPropagation();openM(${s.id})">Connect</button><button class="btn btn-outline" style="padding:7px 12px;font-size:12px;" onclick="event.stopPropagation();openM(${s.id})">Details</button></div>`;
+    c.addEventListener('click',()=>openM(s.id));
+    g.appendChild(c);
   });
 }
-
-function openModal(id) {
-  const s = suppliers.find(x => x.id === id);
-  const typeCls = s.type === 'Distributor' ? 'dist' : 'mfr';
-  const typeLabel = s.type === 'Distributor' ? '🏬 Authorized Distributor' : '🏭 Direct Supplier';
-  document.getElementById('mLogo').style.background = s.c;
-  document.getElementById('mLogo').textContent = s.i;
-  document.getElementById('mName').textContent = s.name;
-  document.getElementById('mSub').textContent = `${s.cat} · ${s.loc}`;
-  document.getElementById('mBadges').innerHTML = `<div class="badge-row"><span class="badge-asr">✔ ASR Registered</span><span class="badge-type ${typeCls}">${typeLabel}</span></div>`;
-  document.getElementById('mRating').innerHTML = `<span style="color:#FF9900;font-size:13px;">${stars(s.r)}</span> <span style="color:#888;font-size:12px;">${s.r} (${s.rv} reviews)</span>`;
-  document.getElementById('mDesc').textContent = s.desc;
-  document.getElementById('mTags').innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
-  document.getElementById('mStats').innerHTML = Object.entries(s.stats).map(([k,v]) => `<div class="modal-stat"><div class="modal-stat-num">${v}</div><div class="modal-stat-label">${k}</div></div>`).join('');
-  document.getElementById('mProducts').innerHTML = s.products.map(p => `<span class="tag">🏷 ${p}</span>`).join('');
-  document.getElementById('modalOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+function openM(id){
+  const s=suppliers.find(x=>x.id===id);
+  const typeCls=s.type==='Distributor'?'badge-dist':'badge-mfr';
+  const typeLbl=s.type==='Distributor'?'🏬 Authorized Distributor':'🏭 Direct Supplier';
+  document.getElementById('mLogo').style.background=s.c;
+  document.getElementById('mLogo').textContent=s.i;
+  document.getElementById('mName').textContent=s.name;
+  document.getElementById('mSub').textContent=`${s.cat} · ${s.loc} · MOQ ${s.moq}`;
+  document.getElementById('mBadges').innerHTML=`<span class="badge-asr">✔ ASR Registered</span><span class="${typeCls}">${typeLbl}</span><span style="color:#FF9900;font-size:12px;margin-left:4px;">${stars(s.r)} ${s.r} (${s.rv})</span>`;
+  document.getElementById('mDesc').textContent=s.desc;
+  document.getElementById('mTags').innerHTML=s.tags.map(t=>`<span class="mtag">${t}</span>`).join('');
+  document.getElementById('mStats').innerHTML=Object.entries(s.stats).map(([k,v])=>`<div class="mstat"><div class="mstat-num">${v}</div><div class="mstat-label">${k}</div></div>`).join('');
+  document.getElementById('mProds').innerHTML=s.products.map(p=>`<span class="mtag">🏷 ${p}</span>`).join('');
+  document.getElementById('mBg').classList.add('open');
+  document.body.style.overflow='hidden';
 }
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-renderSpnCards(suppliers);
+function closeM(){document.getElementById('mBg').classList.remove('open');document.body.style.overflow='';}
+function closeMOutside(e){if(e.target===document.getElementById('mBg'))closeM();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+renderSups(suppliers);
 </script>
 </body>
 </html>
