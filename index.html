@@ -173,8 +173,8 @@ body{font-family:"Amazon Ember","Helvetica Neue",Arial,sans-serif;background:#f3
   <div class="nav-utils"><a>Messages</a><a>Help</a><a>Settings</a></div>
 </nav>
 <div class="tabnav">
-  <div class="tab">Catalog</div><div class="tab active">Home</div>
-  <div class="tab">Inventory</div><div class="tab">Orders</div>
+  <div class="tab">Catalog</div><div class="tab">Home</div>
+  <div class="tab active">Inventory</div><div class="tab">Orders</div>
   <div class="tab">Advertising</div><div class="tab">Stores</div>
   <div class="tab">Programs</div><div class="tab">Reports</div>
   <div class="tab">Performance</div><div class="tab">Apps &amp; Services</div>
@@ -361,35 +361,53 @@ body{font-family:"Amazon Ember","Helvetica Neue",Arial,sans-serif;background:#f3
 
       <!-- Entry 2: Established seller -->
       <div>
-        <div style="font-size:12px;font-weight:700;color:#0F1111;margin-bottom:8px;">🏪 Existing Seller — Listing Creation or Enforcement</div>
+        <div style="font-size:12px;font-weight:700;color:#0F1111;margin-bottom:8px;">🏪 Existing Seller — Inventory Tab</div>
         <div class="mockup">
           <div class="mockup-bar">
             <div class="dot" style="background:#ff5f56"></div>
             <div class="dot" style="background:#ffbd2e"></div>
             <div class="dot" style="background:#27c93f"></div>
-            <div class="url">catalog › add-products</div>
+            <div class="url">sellercentral.amazon.in › inventory › manage</div>
           </div>
           <div class="sc-nav-strip">
-            <div class="sc-nav-tab a">Add Products</div>
-            <div class="sc-nav-tab">Performance Notifications</div>
+            <div class="sc-nav-tab a">Manage Inventory</div>
+            <div class="sc-nav-tab">FBA Inventory</div>
+            <div class="sc-nav-tab">Stranded Inventory</div>
           </div>
           <div class="mockup-body">
-            <div style="font-size:18px;font-weight:300;margin-bottom:12px;">List Your Products</div>
+            <!-- Low stock alert with ASR -->
             <div class="alert-box warn" style="margin-bottom:10px;">
-              <div class="alert-title">⚠️ Supply chain verification required before this listing goes live</div>
-              <div style="font-size:12px;color:#555;margin-top:3px;">Upload invoices from your supplier — or source from an ASR supplier to satisfy this automatically.</div>
-            </div>
-            <div style="background:linear-gradient(135deg,#131921,#1b2b3a);border-radius:4px;padding:12px;display:flex;align-items:center;gap:10px;">
-              <div style="font-size:22px;">🏭</div>
-              <div style="flex:1;">
-                <div style="color:#FF9900;font-size:12px;font-weight:700;margin-bottom:2px;">Amazon Supplier Registry (ASR)</div>
-                <div style="color:#9ba8b4;font-size:11px;">Browse verified suppliers — verification satisfied automatically</div>
+              <div class="alert-title">📦 4 ASINs running low on stock</div>
+              <div style="font-size:12px;color:#555;margin-top:3px;">Need a verified supplier to restock? Browse ASR to source inventory — no invoice upload needed.</div>
+              <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+                <button class="btn btn-orange" style="padding:6px 14px;font-size:12px;" onclick="show('browse')">🏭 Find ASR Supplier</button>
+                <span style="font-size:11px;color:#888;">Verification pre-cleared</span>
               </div>
-              <button class="btn btn-orange" style="padding:6px 12px;font-size:11px;flex-shrink:0;" onclick="show('browse')">Browse</button>
+            </div>
+            <!-- Inventory table stub -->
+            <div style="border:1px solid #ddd;border-radius:3px;overflow:hidden;">
+              <div style="background:#f0f2f2;padding:7px 12px;display:flex;gap:16px;font-size:11px;font-weight:700;color:#555;border-bottom:1px solid #ddd;">
+                <span style="flex:2;">Product Name</span><span style="flex:1;">ASIN</span><span style="flex:1;">Stock</span><span style="flex:1;">Status</span>
+              </div>
+              <div style="padding:8px 12px;display:flex;gap:16px;font-size:12px;border-bottom:1px solid #f0f0f0;align-items:center;">
+                <span style="flex:2;">Bluetooth Earphones Pro</span><span style="flex:1;color:#888;">B09XZ1</span>
+                <span style="flex:1;color:#C40000;font-weight:700;">3 units</span>
+                <span style="flex:1;"><span class="tag red" style="margin:0;">Low Stock</span></span>
+              </div>
+              <div style="padding:8px 12px;display:flex;gap:16px;font-size:12px;border-bottom:1px solid #f0f0f0;align-items:center;">
+                <span style="flex:2;">Wireless Charger 20W</span><span style="flex:1;color:#888;">B08AB2</span>
+                <span style="flex:1;color:#C40000;font-weight:700;">0 units</span>
+                <span style="flex:1;"><span class="tag red" style="margin:0;">Out of Stock</span></span>
+              </div>
+              <div style="padding:8px 12px;display:flex;gap:16px;font-size:12px;align-items:center;">
+                <span style="flex:2;">Smart LED Bulb Pack</span><span style="flex:1;color:#888;">B07CD3</span>
+                <span style="flex:1;color:#067D62;">142 units</span>
+                <span style="flex:1;"><span class="tag green" style="margin:0;">Active</span></span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="tag green" style="margin-top:8px;">Existing sellers skip the invoice queue</div>
+        <div class="tag green" style="margin-top:8px;">Restock from ASR — verification pre-cleared</div>
       </div>
 
     </div>
